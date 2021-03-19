@@ -1,0 +1,11 @@
+#cache
+.eslintcache
+
+.idea/
+*.iml
+*.xml
+
+# testing
+/coverage
+
+npm-debug.log*
