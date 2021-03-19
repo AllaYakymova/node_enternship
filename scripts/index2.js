@@ -15,11 +15,7 @@ function arrangeWordsByNumbers(string) {
             }
         })
         .filter(item => item)
-        .sort((a, b) => {
-            let numberA = getNumber(a);
-            let numberB = getNumber(b);
-            return numberA > numberB ? 1 : -1;
-        })
+        .sort((a, b) => getNumber(a) > getNumber(b) ? 1 : -1)
         .join(" ");
     console.log(newString);
     return newString;
