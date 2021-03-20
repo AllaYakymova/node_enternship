@@ -1,9 +1,6 @@
 "use strict";
 
-let x = "4of Fo1r pe6ople g14ood th5e the2 sfp0";
-let y ="";
-
-function arrangeWordsByNumbers(string) {
+export default function arrangeWordsByNumbers(string) {
   let getNumber = word => +word.match(/\d+/)[0];
 
   if(string.length !== 0) {
@@ -23,6 +20,3 @@ function arrangeWordsByNumbers(string) {
     return string;
   }
 }
-
-console.log(arrangeWordsByNumbers(x));
-console.log("empty string:", arrangeWordsByNumbers(y));

@@ -1,14 +1,5 @@
 "use strict";
 
-let cards = ["A2R", "A8Y", "B5R", "A10R", "B6Y", "B1R", "A6Y", "A7Y", "A3R", "B2Y", "A2Y", "A8Y", "A5R", "A10R", "A6Y", "A1R", "A6Y", "A7Y", "A9R", "A2Y"];
-let cards1 = [];
-let cards2 = ["A4Y", "A4Y"];
-let cards3 = ["A4Y", "A4R"];
-let cards4 = ["A4Y", "A5R", "B5R", "A4Y", "B6Y"];
-let cards5 = ["A4R", "A4R", "A4R"];
-let cards6 = ["A4R", "A6R", "A8R", "A10R", "A11R"];
-
-
 const divideCards = (card, range) => card.substring(range[0], range[1]);
 
 function checkCards(cards, teamCount) {
@@ -36,7 +27,7 @@ function checkCards(cards, teamCount) {
   return deletedCount;
 }
 
-function menStillStanding(cards, teamCount) {
+export default function menStillStanding(cards, teamCount) {
   let teamA = [];
   let teamB = [];
   cards.filter(card => {
@@ -55,12 +46,4 @@ function menStillStanding(cards, teamCount) {
   }
   return [teamCount - deletedA, teamCount - deletedB];
 }
-
-console.log(menStillStanding(cards, 11));
-console.log(menStillStanding(cards1, 11));
-console.log(menStillStanding(cards2, 11));
-console.log(menStillStanding(cards3, 11));
-console.log(menStillStanding(cards4, 11));
-console.log(menStillStanding(cards5, 11));
-console.log(menStillStanding(cards6, 11));
 

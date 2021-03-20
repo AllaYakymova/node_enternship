@@ -17,8 +17,7 @@ function integerToBinary1(integer) {
   return arr.reverse().join("");
 }
 
-
-function integerToBinarySum(integer) {
+export default function integerToBinarySum(integer) {
   if (Number.isInteger(integer) && integer > 0) {
     let binary = integerToBinary(integer);
     return binary
@@ -28,11 +27,6 @@ function integerToBinarySum(integer) {
     console.log("Enter a non-negative integer");
   }
 }
-
-console.log(integerToBinarySum(1234));
-
-
-
 
 console.log(integerToBinary(1234));
 console.log(integerToBinary1(1234));
