@@ -49,7 +49,8 @@ function menStillStanding(cards, teamCount) {
     });
     let deletedA = checkCards(teamA, teamCount);
     let deletedB = checkCards(teamB, teamCount);
-    if (deletedA >= 7 || deletedB >= 7) {
+
+    if (deletedA > 7 || deletedB > 7) {
         console.log('Your team is loooooser!')
     }
     return [teamCount - deletedA, teamCount - deletedB];
