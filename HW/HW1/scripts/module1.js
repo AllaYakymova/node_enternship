@@ -12,9 +12,9 @@ function integerToBinary1(integer) {
   while (rest !== 0) {
     let remainder = rest % 2;
     rest = Math.floor(rest / 2);
-    arr = [...arr, remainder];
+    arr = [remainder, ...arr];
   }
-  return arr.reverse().join("");
+  return arr.join("");
 }
 
 export default function integerToBinarySum(integer) {

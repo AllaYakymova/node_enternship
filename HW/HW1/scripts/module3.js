@@ -42,7 +42,9 @@ export default function menStillStanding(cards, teamCount) {
   let deletedB = checkCards(teamB, teamCount);
 
   if (deletedA > 7 || deletedB > 7) {
-    console.log("Your team is looser!");
+    let looseTeam = "";
+    deletedA > deletedB ? looseTeam = "A" : looseTeam = "B";
+    console.log(`Team ${looseTeam} is looser!`);
   }
   return [teamCount - deletedA, teamCount - deletedB];
 }
