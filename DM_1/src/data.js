@@ -41,3 +41,8 @@ export const triangles = [
   },
 ];
 
+// task #5
+export const range = {
+  min: 145003,
+  max: 999999,
+};
