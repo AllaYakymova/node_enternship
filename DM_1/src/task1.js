@@ -1,7 +1,7 @@
 "use strict";
 
 export default class ChessDesk {
-  constructor(length, wide, symbol) {
+  constructor(length = 8, wide = 8, symbol = ".") {
     this.length = length;
     this.wide = wide;
     this.symbol = symbol;
@@ -34,6 +34,6 @@ export default class ChessDesk {
   implementDesk() {
     let chessDeskString = this.setString();
     let table = document.getElementById("chess_desk");
-    table.insertAdjacentHTML("beforeend", `<p>${chessDeskString}</p>`);
+    table.insertAdjacentHTML("beforeend", `<span>${chessDeskString}</span>`);
   }
 }

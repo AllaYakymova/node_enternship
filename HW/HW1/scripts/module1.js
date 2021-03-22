@@ -22,7 +22,7 @@ export default function integerToBinarySum(integer) {
     let binary = integerToBinary(integer);
     return binary
       .split("")
-      .reduce((a, b) => +a + +b);
+      .reduce((a, b) => a + b);
   } else {
     console.log("Enter a non-negative integer");
   }

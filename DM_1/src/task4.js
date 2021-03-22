@@ -1,6 +1,8 @@
 "use strict";
 // алгоритм Манакера
 //https://medium.com/@alexprozoroff/%D0%B0%D0%BB%D0%B3%D0%BE%D1%80%D0%B8%D1%82%D0%BC-%D0%BC%D0%B0%D0%BD%D0%B0%D0%BA%D0%B5%D1%80%D0%B0-9560dc13a975
+// http://e-maxx.ru/algo/palindromes_count
+// https://ru.wikipedia.org/wiki/%D0%9F%D0%BE%D0%B8%D1%81%D0%BA_%D0%B4%D0%BB%D0%B8%D0%BD%D0%BD%D0%B5%D0%B9%D1%88%D0%B5%D0%B9_%D0%BF%D0%BE%D0%B4%D1%81%D1%82%D1%80%D0%BE%D0%BA%D0%B8-%D0%BF%D0%B0%D0%BB%D0%B8%D0%BD%D0%B4%D1%80%D0%BE%D0%BC%D0%B0
 
 // transform N-character string into 2N+1 character one word => |w|o|r|d|
 const preprocessString = str => `|${str.split("").join("|")}|`;
@@ -20,7 +22,6 @@ function getLongest (str, pal) {
 export default function findPalindrom(number) {
   const preprocessedString = preprocessString(number.toString());
   const lengths = [];
-  console.log(preprocessedString);
 
   //Center and end indexes for the current palindrome
   let center = 0,

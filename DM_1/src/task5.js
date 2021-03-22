@@ -1,9 +1,11 @@
 "use strict";
 
+const sumArrElements = arr => (arr.reduce((a, b) => a + b));
+
 function getEvenOddLuckyTicketSums(arr) {
   let evenNumbers = [];
   let oddNumbers = [];
-  let index = 0;
+  let index = 1;
   arr.filter(el => {
     if (index % 2 === 0) {
       evenNumbers = [...evenNumbers, el];
@@ -12,8 +14,9 @@ function getEvenOddLuckyTicketSums(arr) {
     }
     index++;
   });
-  const evenNumbersSum = evenNumbers.reduce((a, b) => a + b);
-  const oddNumbersSum = oddNumbers.reduce((a, b) => a + b);
+  const evenNumbersSum = sumArrElements(evenNumbers);
+  const oddNumbersSum = sumArrElements(oddNumbers);
+  // console.log(arr, oddNumbers, evenNumbers);
   if (evenNumbersSum === oddNumbersSum) {
     return 1;
   } else {
@@ -22,8 +25,8 @@ function getEvenOddLuckyTicketSums(arr) {
 }
 
 function get3To3LuckyTicketSums(arr) {
-  const firstPartSum = arr.slice(0, 3).reduce((a, b) => a + b);
-  const secondPartSum = arr.slice(3, 6).reduce((a, b) => a + b);
+  const firstPartSum = sumArrElements(arr.slice(0, 3));
+  const secondPartSum = sumArrElements(arr.slice(3, 6));
   if (firstPartSum === secondPartSum) {
     return 1;
   } else {
@@ -48,11 +51,11 @@ export default function compareLuckySums(range) {
       countEvenOdd++;
     }
   }
-  if(count3To3 > countEvenOdd) {
+  if (count3To3 > countEvenOdd) {
     totalScore["best approach"] = "count 3 to 3";
     totalScore["winner score"] = count3To3;
     totalScore["loosing score"] = countEvenOdd;
-  } else if(count3To3 < countEvenOdd) {
+  } else if (count3To3 < countEvenOdd) {
     totalScore["best approach"] = "count evens & odds";
     totalScore["winner score"] = countEvenOdd;
     totalScore["loosing score"] = count3To3;

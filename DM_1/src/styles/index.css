@@ -2,8 +2,8 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 0 10px;
-    border: 1px solid #1d1eff;
+    padding: 10px;
+    /*border: 1px solid #1d1eff;*/
     line-height: 50%;
     font-size: 16px;
 }
