@@ -6,13 +6,17 @@ console.log(concat('qwerty', "ytrewq"));
 
 
 // lastIndexOf
-function lastIndexOf(str, element) {
+const lastIndexOf = (str, substr) => {
   let indexes = [];
-  str.split("").forEach((el, index) => el === element && indexes.unshift(index + 1));
-  return indexes[0];
-}
+  str.split("").forEach((el, index) => el === substr.slice(0,1) && indexes.unshift(index));
+  for(let i = 0; i <= indexes.length; i++) {
+    if(str.substr(indexes[0], substr.length) === substr) {
+      return indexes[i];
+    }
+  }
+};
 
-console.log(lastIndexOf("qwerty", "w"));
+console.log(lastIndexOf("qwertyererrh", "er"));
 
 
 //includes
