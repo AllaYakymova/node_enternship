@@ -10,7 +10,7 @@ const lastIndexOf = (str, substr) => {
   let indexes = [];
   str.split("").forEach((el, index) => el === substr.slice(0,1) && indexes.unshift(index));
   for(let i = 0; i <= indexes.length; i++) {
-    if(str.substr(indexes[0], substr.length) === substr) {
+    if(str.substr(indexes[i], substr.length) === substr) {
       return indexes[i];
     }
   }
