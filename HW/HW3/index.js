@@ -1,6 +1,6 @@
 "use strict";
 let arrayPush = {
-  arr: [1, 2, 3, 4],
+  arr: ['пастернак', 'картошка'],
 };
 let arrayPop = {
   arr: [1, 2, 3, 4],
@@ -12,18 +12,18 @@ let arrayUnshift = {
   arr: [1, 2, 3, 4],
 };
 let arrayConcat = {
-  arr: [1, 2, 3, 4],
+  arr: ['пастернак', 'картошка'],
 };
 
 // push добавляет один или более элементов в конец массива и возвращает новую длину массива.
 function push(...arg) {
-  let [addedArg] = arg;
+  let addedArg = [...arg];
   this.arr = [...this.arr, ...addedArg];
   return this.arr.length;
 }
 let pushMutable = push.bind(arrayPush);
 
-console.log('push', pushMutable([9,8,7,6]), arrayPush.arr);
+console.log('push', pushMutable(1, [2, 3]), arrayPush.arr);
 
 // pop удаляет последний элемент из массива и возвращает его значение.
 function pop() {
@@ -55,11 +55,13 @@ console.log('unshift', unshiftMutable(9,8,7,6,'f'), arrayUnshift.arr);
 
 // concat возвращает новый массив, состоящий из массива, на котором он был вызван, соединённого с другими массивами и/или значениями, переданными в качестве аргументов.
 function concat (...arg) {
-  this.arr = [...this.arr, ...arg];
-  return this.arr
+  let [...added] = arg;
+  let argArr = added.reduce((acc, el) => Array.isArray(el) ? [...acc, ...el] :
+  [...acc, el], []);
+  return [...this.arr, ...argArr];
 }
 let concatMutable = concat.bind(arrayConcat);
-console.log('concat', concatMutable([1, 4, 5, 6], 'f'));
+console.log('concat', concatMutable(1, [2, 3]), arrayConcat.arr);
 
 
 
