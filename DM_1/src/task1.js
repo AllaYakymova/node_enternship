@@ -9,7 +9,7 @@ export default class ChessDesk {
 
   setString() {
     let pattern = `${this.symbol}\u00A0`;
-    let br = "<br/>";
+    let br = `\n`;
     let res = "";
     for (let row = 1; row <= this.length; row++) {
       let str = "";
@@ -33,6 +33,10 @@ export default class ChessDesk {
 
   implementDesk() {
     let chessDeskString = this.setString();
+    console.log(chessDeskString);
+    let br = new RegExp(/\n/);
+    let res = chessDeskString.replaceAll(/\n/, '<br>');
+    console.log(res);
     let table = document.getElementById("chess_desk");
     table.insertAdjacentHTML("beforeend", `<span>${chessDeskString}</span>`);
   }

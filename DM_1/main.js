@@ -6,6 +6,7 @@ import compareLuckySums from "./src/task5.js";
 import {envelope1, envelope2, triangles, range} from "./src/data.js";
 
 let myChess = new ChessDesk();
+console.log(myChess.setString());
 // myChess.implementDesk();
 
 console.log(compareEnvelopes(envelope1, envelope2));
