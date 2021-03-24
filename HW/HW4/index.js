@@ -55,13 +55,13 @@ console.log(meeting2([['XX', 2], ['XXXX', 6], ['XXXXX', 4]], 0)); // 'Game On'
 // Task #3
 function findPoints(points) {
   let closestPoints = [];
-  let q = Infinity;
-  points.some((point, i) => {
+  let min = Infinity;
+  points.forEach((point, i) => {
     for (let j = 0; j < points.length; j++) {
       if (j !== i) {
         let res = Math.abs(point[0] - points[j][0]) + Math.abs(point[1] - points[j][1]);
-        if (res < q) {
-          q = res;
+        if (res < min) {
+          min = res;
           closestPoints = [point, points[j]];
         }
       }
