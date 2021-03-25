@@ -15,7 +15,7 @@ function meeting(guestList) {
     if (a[0] < b[0]) return -1;
     if (a[0] === b[0]) {
       if (a[1] > b[1]) return 1;
-      else if (a[1] < b[1]) return -1;
+      if (a[1] < b[1]) return -1;
     }
   };
 
@@ -24,7 +24,7 @@ function meeting(guestList) {
     .map(el => arrangeName(el, ':'))
     .sort(sortNames)
     .map(el => `(${el.join(', ')})`)
-    .join(' ');
+    .join('');
 }
 
 const guestList = "Fred:Corwill;Wilfred:Corwill;Barney:Tornbull;Betty:Tornbull;Bjon:Tornbull;Raphael:Corwill;Alfred:Corwill";
@@ -57,9 +57,9 @@ function findPoints(points) {
   let closestPoints = [];
   let min = Infinity;
   points.forEach((point, i) => {
-    for (let j = 0; j < points.length; j++) {
+    for (let j = i; j < points.length; j++) {
       if (j !== i) {
-        let res = Math.abs(point[0] - points[j][0]) + Math.abs(point[1] - points[j][1]);
+        let res = Math.sqrt(Math.pow(point[0] -points[j][0], 2) + Math.pow(point[1] -points[j][1], 2));
         if (res < min) {
           min = res;
           closestPoints = [point, points[j]];
