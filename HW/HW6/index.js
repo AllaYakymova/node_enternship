@@ -9,7 +9,7 @@ let field = [[1, 2, 1], [2, 1, 1], [2, 2, 1]];
 function TicTacToeGame(field) {
   let winner = [];
   let united = field.reduce((acc, el) => [...acc, ...el], []);
-  if(united.filter(el => el !== 0 && el !== 1 && el !== 2 ).length > 0 ) return 'There is not a valid data on the board';
+  if (united.filter(el => el !== 0 && el !== 1 && el !== 2).length > 0) return 'There is not a valid data on the board';
   if (united.filter(el => el === 0).length > 0) return -1; // checking of empty spots
 
   let horizontalCheck = field.reduce((acc, el) => [...new Set(el)].length === 1 ? el[0] : acc, 0);
@@ -33,24 +33,34 @@ console.log(TicTacToeGame(field));
 
 //task #2
 function decoder(string) {
-  let result = [];
+  let result = '';
   if (string.length === 0) return string;
-  let dotCounter = [...string.matchAll(/\./g)].map(el => el.index); // индексы и начало предложений
-  let getDecoder = (str) => str.replace(/[,"]/gm, '').trim().toLowerCase().split(' ').map(el => el.length);
-  let getDecoderText = (str, start, wordsCount) => str.slice(start, dotCounter[wordsCount] + 1);
+  let dotCounter = [...string.matchAll(/\./g)].map(el => el.index); // индексы и начало точек
+
+  let getDecoderText = (str, start, wordsCount) => str.slice(start, dotCounter[wordsCount] + 1); // текст для поиска слов, зошифрованных в 1 предложении
 
   for (let i = 0; i <= dotCounter.length;) {
-    const decoderSentence = i === 0 ? string.slice(i, dotCounter[i]) : string.slice(dotCounter[i] + 1, dotCounter[i + 1]); // шифровочное предложение
-    const decoderArr = getDecoder(decoderSentence);
+    let decoderSentence; // шифровочное предложение
+    if(i === 0) {
+      decoderSentence = string.slice(i, dotCounter[i]);
+    } else {
+      decoderSentence = string.slice(dotCounter[i] + 1, dotCounter[i + 1]);
+    }
+    const decoderArr = decoderSentence.replace(/[,"]/gm, '').trim().toLowerCase().split(' ').map(el => el.length);
     const detectedText = getDecoderText(string, i === 0 ? dotCounter[i] + 1 : dotCounter[i + 1] + 1, i === 0 ? decoderArr.length + i : decoderArr.length + i + 1);
-    let strArr = detectedText.replace(/[,"]/g, '').toLowerCase().split('.').map(el => el.trim()).filter(el => el.length !== 0);
-    let res =  decoderArr.reduce((acc, el, i) => [...acc, ...strArr[i].split(' ').slice(el - 1, el)], []).join(' ');
-    res = res[0].toUpperCase() + res.slice(1);
-    res = `${res}.`;
-    i = i === 0 ? i + decoderArr.length : i + decoderArr.length + 1;
+
+    if (decoderSentence.length !== 0) {
+      let strArr = detectedText.replace(/[,"]/g, '').toLowerCase().split('.').map(el => el.trim()).filter(el => el.length !== 0);
+      let res = decoderArr.reduce((acc, el, i) => [...acc, ...strArr[i].split(' ').slice(el - 1, el)], []).join(' ');
+      res = res[0].toUpperCase() + res.slice(1);
+      res = `${res}. `;
+      result += res;
+      console.log(result); // не пойму, здесь отображается result
+      i = i === 0 ? i + decoderArr.length : i + decoderArr.length + 1;
+    }
   }
-  console.log(result);
-  return result.join('.');
+  console.log(result); // а здесь result не отображается (((
+  return result;
 }
 
 let str = 'Yesterday, we bumped into Laura. It had to happen, but you can\'t deny the timing couldn\'t be worse. The "m1ission" to try and seduce her was a complete failure last month. By the way, she still has the ring I gave her. Anyhow, it hasn\'t been a pleasurable experience to go through it. I wanted to feel done with it first. Y2sterday, we bumped into Laura. It had to happen, but you can\'t deny the timing couldn\'t be worse. The "m2ission" to try and seduce her was a complete failure last month. By the way, she still has the ring I gave her. Anyhow, it hasn\'t been a pleasurable experience to go through it. I wanted to feel done with it first. Y3sterday, we bumped into Laura. It had to happen, but you can\'t deny the timing couldn\'t be worse. The "m3ission" to try and seduce her was a complete failure last month. By the way, she still has the ring I gave her. Anyhow, it hasn\'t been a pleasurable experience to go through it. I wanted to feel done with it first.';
