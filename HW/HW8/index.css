@@ -1,0 +1,33 @@
+body {
+    margin: 0 auto;
+}
+.spinner-wrap {
+    margin-left: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100px;
+
+    border: 1px solid #552899;
+    padding: 10px;
+}
+
+.spinner1 {
+    height: 15px;
+    background-color: #552899;
+}
+.spinner2 {
+    height: 15px;
+    width: 2px;
+    background-color: #99457f;
+}
+.spinner3 {
+    width: 15px;
+    height: 10px;
+    clip-path: polygon(0% 20%, 60% 20%, 60% 0%, 100% 50%, 60% 100%, 60% 80%, 0% 80%);
+    background-color: #2d9925;
+}
+.spinner4 {
+    height: 15px;
+    width: 15px;
+}
