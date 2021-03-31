@@ -1,6 +1,5 @@
 'use strict';
 
-// let document = document.body;
 let wrapper = document.getElementById('spinner-wrap');
 let spinner1 = document.createElement('div');
 let spinner2 = document.createElement('div');
@@ -135,3 +134,26 @@ setInterval(
   250,
   {spin: spin5, count: 0}
   );
+
+
+let spin6 = {
+  1: 100000,
+  2: 101000,
+  3: 110100,
+  4: 111000,
+};
+
+setInterval(
+  (counter) => {
+    if (counter.count === 0) {
+      counter.count = 4;
+    }
+    console.clear();
+    console.log(String.fromCharCode(counter.spin[counter.count]));
+
+    counter.count--;
+  },
+  250,
+  {spin: spin6, count: 0}
+  );
+
