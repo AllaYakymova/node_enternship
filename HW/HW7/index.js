@@ -32,16 +32,16 @@ function decoder(string) {
 
 let str = 'Yesterday, we bumped into Laura. It had to happen, but you can\'t deny the timing couldn\'t be worse. The "m1ission" to try and seduce her was a complete failure last month. By the way, she still has the ring I gave her. Anyhow, it hasn\'t been a pleasurable experience to go through it. I wanted to feel done with it first. Y2sterday, we bumped into Laura. It had to happen, but you can\'t deny the timing couldn\'t be worse. The "m2ission" to try and seduce her was a complete failure last month. By the way, she still has the ring I gave her. Anyhow, it hasn\'t been a pleasurable experience to go through it. I wanted to feel done with it first. Y3sterday, we bumped into Laura. It had to happen, but you can\'t deny the timing couldn\'t be worse. The "m3ission" to try and seduce her was a complete failure last month. By the way, she still has the ring I gave her. Anyhow, it hasn\'t been a pleasurable experience to go through it. I wanted to feel done with it first.';
 
-decoder(str);
+// decoder(str);
 
 ////////////////////////////////////////////////////////////////
 // Battle ships: Sunk damaged or not touched?
 
 function damagedOrSunk(board, attacks) {
-  let field = [...board];
+  let field = JSON.parse(JSON.stringify(board));
   let result = {sunk: 0, damaged: 0, notTouched: 0, points: 0};
 // starting coordinates
-  let x0 = field.length - 1;
+  let x0 = field.length;
   let y0 = 0;
 
   let boats = board.reduce((acc, el) => [...acc, ...el], []).reduce((acc, el) => {
@@ -55,7 +55,7 @@ function damagedOrSunk(board, attacks) {
     return this.sunk + this.damaged * 0.5 - this.notTouched;
   };
 
-  let shots = attacks.map(el => field[x0 - el[1] + 1][y0 + el[0] - 1]);
+  let shots = attacks.map(el => field[x0 - el[1]][y0 + el[0] - 1]);
   for (let ship in boats) {
     let boatNo = ship.slice(-1);
     let shotBoatLength = shots.filter(el => el === +boatNo).length;
@@ -75,6 +75,9 @@ let board = [
   [0, 3, 0, 1, 0, 0],
 ];
 let attacks = [[2, 1], [1, 3], [4, 2], [4, 1]];
+
+let together = (x) => board.map(el => el.filter((num, i) => num === x ), []);
+console.log(together(1));
 
 console.log(damagedOrSunk(board, attacks));
 

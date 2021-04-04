@@ -4,26 +4,16 @@
 function meeting(guestList) {
 
   const arrangeName = (el, divider) => {
-    const index = el.indexOf(divider);
-    const firstName = el.slice(0, index).toUpperCase();
-    const lastName = el.slice(index + 1).toUpperCase();
-    return [lastName, firstName];
+    const [name, lastName] = el.toUpperCase().split(divider);
+    return `(${ lastName }, ${ name })`;
   };
 
-  const sortNames = (a, b) => {
-    if (a[0] > b[0]) return 1;
-    if (a[0] < b[0]) return -1;
-    if (a[0] === b[0]) {
-      if (a[1] > b[1]) return 1;
-      if (a[1] < b[1]) return -1;
-    }
-  };
+  const sortNames = (a, b) => a < b ? -1: 0;
 
   return guestList
     .split(';')
     .map(el => arrangeName(el, ':'))
     .sort(sortNames)
-    .map(el => `(${el.join(', ')})`)
     .join('');
 }
 

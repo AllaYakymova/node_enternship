@@ -78,13 +78,12 @@ let reduceArr3 = ["Apple", "Banana", "Pineapple"];
 
 //// REDUCE - MAP
 const reduceMap = arr => arr.reduce((acc, el) => [...acc, el.slice(0, 1)], []);
-
 console.log(reduceMap(reduceArr));
 
 
 //// REDUCE - FILTER
 const reduceFilter = arr => arr.reduce((acc, el) =>
-  el.slice(0, 1).toLowerCase() === "a" ? [...acc, el] : [...acc], []);
+  el.slice(0, 1).toLowerCase() === "a" ? [...acc, el] : acc, []);
 
 console.log(reduceFilter(reduceArr2));
 

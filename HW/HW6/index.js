@@ -59,10 +59,12 @@ function decoder(string) {
       i = i === 0 ? i + decoderArr.length : i + decoderArr.length + 1;
     }
   }
-  console.log(result); // а здесь result не отображается (((
+  console.log(result);// а здесь result не отображается (((
   return result;
 }
 
 let str = 'Yesterday, we bumped into Laura. It had to happen, but you can\'t deny the timing couldn\'t be worse. The "m1ission" to try and seduce her was a complete failure last month. By the way, she still has the ring I gave her. Anyhow, it hasn\'t been a pleasurable experience to go through it. I wanted to feel done with it first. Y2sterday, we bumped into Laura. It had to happen, but you can\'t deny the timing couldn\'t be worse. The "m2ission" to try and seduce her was a complete failure last month. By the way, she still has the ring I gave her. Anyhow, it hasn\'t been a pleasurable experience to go through it. I wanted to feel done with it first. Y3sterday, we bumped into Laura. It had to happen, but you can\'t deny the timing couldn\'t be worse. The "m3ission" to try and seduce her was a complete failure last month. By the way, she still has the ring I gave her. Anyhow, it hasn\'t been a pleasurable experience to go through it. I wanted to feel done with it first.';
 
-console.log(decoder(str));
+decoder(str);
+
+
