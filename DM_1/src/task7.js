@@ -1,24 +1,50 @@
-// "use strict";
-//
-// const context = {
-//   min: 5,
-//   max: 10,
-//   length: null,
-// };
-//
-// function fibo(n) {
-//   if (n === 0 || n === 1) {
-//     return  n;
-//   } else if (n < 0) {
-//     return fibo(n + 2) - fibo(n + 1);
-//   } else {
-//     return fibo(n - 1) + fibo(n - 2);
-//   }
-// }
-// fibo(11);
-//
-//
-//
+"use strict";
+
+const context = {
+  min: 5,
+  max: 10,
+  length: null,
+};
+
+function fibo(n) {
+  let a = 1;
+  let b = 1;
+  for (let i = 3; i <= n; i++) {
+    let c = a + b;
+    a = b;
+    b = c;
+  }
+  return b;
+}
+
+console.log(fibo(7));
+
+
+// формула Бине https://habr.com/ru/post/449616/
+const nextFibNumber = n => {
+  const a = (1 + 5 ** 0.5) / 2;
+  return Math.round(a ** n / 5 ** 0.5);
+};
+
+function getFibLine(min, max, length) {
+  let i = min;
+  const arr = [];
+
+  while (true) {
+    let res = nextFibNumber(i);
+    i++;
+    if (res <= max && (length ? arr.length < length : true)) {
+      arr.push(res)
+    } else {
+      break;
+    }
+  }
+  return arr
+}
+
+console.log(getFibLine(5, 25, 3));
+
+
 // function validationNumber( value) {
 //   let number = null;
 //   while (number === null || isNaN(number)) {
