@@ -1,5 +1,5 @@
 "use strict";
-
+import validSchema from './validSchema.js';
 // Вывести треугольники в порядке убывания их площади.
 // Входные параметры: массив объектов треугольник
 // Выход: упорядоченный массив имён треугольников
@@ -22,13 +22,16 @@ function calculateSquareOfTriangle(triangle) {
   return Math.sqrt(p * (p - a) * (p - b) * (p - c)).toFixed(2);
 }
 
-export default function arrangeTrianglesBySquare(arr) {
+export default
+function arrangeTrianglesBySquare(arr) {
   let trianglesMap = new Map();
   let arrangedTriangles = [];
   arr.forEach(triangle => {
-    if(validateVerticesNames (triangle)) { // валиадция соотствия имени и названиям сторон
+    const validNames = validSchema.isValidVerticesName(triangle);
+    if(validNames) { // валиадция соотствия имени и названиям сторон
       let square = calculateSquareOfTriangle(triangle);
-      if(validateIfNaN(square)) {   // проверка на адекватность треугольника
+      const isNaN = validSchema.isAdequacy(square, triangle.vertices);
+      if(isNaN) {   // проверка на адекватность треугольника
         trianglesMap.set(triangle, square);
       }
     }
@@ -38,20 +41,24 @@ export default function arrangeTrianglesBySquare(arr) {
   return arrangedTriangles;
 }
 
-function validateVerticesNames (obj) {
-  let vertName =  obj.vertices.toLowerCase();
-  let vertices = Object.keys(obj).filter(el => el !== 'vertices');
-  if(vertices.filter(el => !vertName.includes(el)).length === 0) {
-    return true;
-  } else {
-    console.log({status: 'failed', reason: `Vertices name of ${obj.vertices} contain not existing vertices`});
-    return false
-  }
-}
 
-function validateIfNaN(x) {
-  return Number.isNaN(+x) ? console.log({status: 'failed', reason: `Check the triangle for adequacy was failed`}) : true
-}
+// validation
+
+// function validateVerticesNames (obj) {
+//   let vertName =  obj.vertices.toLowerCase();
+//   let vertices = Object.keys(obj).filter(el => el !== 'vertices');
+//   const isVertices = vertices.filter(el => vertName.includes(el)).length;
+//   if (isVertices === 3 ) {
+//     return true;
+//   } else if (vertices.some(el => !vertName.includes(el)) && isVertices < 3) {
+//     console.log({status: 'failed', reason: `Vertices name of ${obj.vertices} contain not existing vertices.`});
+//     return false
+//   }
+// }
+//
+// function validateIfNaN(x) {
+//   return Number.isNaN(+x) ? console.log({status: 'failed', reason: `Check the triangle for adequacy was failed`}) : true
+// }
 
 
 
