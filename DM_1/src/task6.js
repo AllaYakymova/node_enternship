@@ -8,8 +8,8 @@ export default function numericalSequence(length, minSquare) {
   let validation = (length, minSquare) => {
     const _1 = validSchema.isNumber(length);
     const _2 = validSchema.isNumber(minSquare);
-    const _3 = validSchema.isInteger(+length);
-    const _4 = validSchema.isInteger(+minSquare);
+    const _3 = validSchema.isInteger(length);
+    const _4 = validSchema.isInteger(minSquare);
     const _5 = validSchema.isMin(length, 1);
     const _6 = validSchema.isMin(minSquare, 1);
     const _7 = validSchema.isMax(length, 1000000);

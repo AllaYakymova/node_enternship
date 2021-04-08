@@ -6,14 +6,6 @@ export const envelope2 = {
   c: 9,
   d: 9,
 };
-// export const envelope1 = {
-//   a: 1,
-//   b: '10.5',
-// };
-// export const envelope2 = {
-//   c: 9,
-//   d: 9,
-// };
 
 //task#3
 export const triangles = [

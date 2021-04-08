@@ -12,8 +12,8 @@ export default class ChessBoard {
   board = document.getElementById('chess__board');
 
   validation = () => {
-    const _1 = validSchema.isInteger(+this.length);
-    const _2 = validSchema.isInteger(+this.width);
+    const _1 = validSchema.isInteger(this.length);
+    const _2 = validSchema.isInteger(this.width);
     const _3 = validSchema.isMin(this.length, 2);
     const _4 = validSchema.isMin(this.width, 2);
     const _5 = validSchema.isMax(this.length, 256);
