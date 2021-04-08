@@ -5,8 +5,6 @@ export default function findPalindrom(number) {
 
   const preprocessString = str => `|${str.split('').join('|')}|`;  // word => |w|o|r|d|
 
-//return the result substring by the input string and calculated lengths
-//canada, [0,1,0,1,0,3,0,1,0,3,0,1,0] -> ana
   function getLongest(str, pal) {
     //Maximum palindrome's length and index
     const [length, index] = pal.reduce((max, x, i, arr) => (x > arr[max[1]] ? [x, i] : max), [0, 0]),

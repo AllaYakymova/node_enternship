@@ -5,7 +5,7 @@ mocha.setup('bdd');
 const assert = chai.assert;
 
 export default function test_2() {
-  describe('Task#1 ', () => {
+  describe('Task#1 class Chess Board test', () => {
     it('Board 3X3 with symbol o', () => {
       const myChessTest1 = new ChessBoard(3,3, 'o');
       assert.equal(myChessTest1.implementBoard(), 'o o<br> o <br>o o<br>');
