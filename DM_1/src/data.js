@@ -1,11 +1,19 @@
 export const envelope1 = {
-  a: 10,
-  b: 20,
+  a: 1,
+  b: 10,
 };
 export const envelope2 = {
-  c: 9.99,
-  d: 10,
+  c: 9,
+  d: 9,
 };
+// export const envelope1 = {
+//   a: 1,
+//   b: '10.5',
+// };
+// export const envelope2 = {
+//   c: 9,
+//   d: 9,
+// };
 
 //task#3
 export const triangles = [
@@ -34,15 +42,40 @@ export const triangles = [
     e: 23.36,
   },
   {
-    "vertices": "MON",
-    m: 40,
-    o: 40,
-    n: 12.33,
+    "vertices": "ZAQ", // повторение названия
+    z: 10,
+    a: 20,
+    q: 22.39,
   },
+  // {
+  //   "vertices": "XAQ", // удаляем???
+  //   z: 30,
+  //   a: 20,
+  //   q: 22.39,
+  // },
+  // {
+  //   "vertices": "MON", // неадекватный
+  //   m: 40,
+  //   o: 60,
+  //   n: 12.33,
+  // },
 ];
 
 // task #5
 export const range = {
-  min: 145003,
-  max: 145999,
+  // min: 10000,
+  // max: 1000000,
+  // min: 3,
+  // max: '5',
+  min: 10,
+  max: 20,
+  // min: 20,
+  // max: 50,
+};
+
+// task #7
+export const context = {
+  min: 5,
+  max: 30,
+  length: 3,
 };

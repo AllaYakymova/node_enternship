@@ -4,11 +4,54 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mocha/8.3.2/mocha.min.js" integrity="sha512-TfAL33PtGUxii1awTCbr3qbzQT5fYi7ItCGUfzWlnMJ4cK5BA8JNY4gJzEs+tQVbyElVbtcI2Jlaf9EFVMvyeg==" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mocha/8.3.2/mocha.min.css"
+          integrity="sha512-6RWs5FczsXwODIZJoL0szz3bXX5W+q/m7bFVQ7HSwZbBXd7PpyYrg2f9Dr4Y2Guqi5k4NJsemxXuiiFoI8fQ4A=="
+          crossorigin="anonymous"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chai/4.3.4/chai.min.js"
+            integrity="sha512-gkZWobgJrQevN2HMEeTnSlxWPJ3HS0JJ3nXcgI6XLK/NI0z59jbztRZqbTlIzfl21vIGahQaeW0knwH1az/tbg=="
+            crossorigin="anonymous"></script>
     <link rel="stylesheet" href="./src/styles/index.css">
     <title>DM1_Yakymova</title>
 </head>
 <body>
-<div id="chess_desk" class="chess-desk"></div>
+    <div id="chess_desk" class="chess-desk"></div>
+    <h3>Task #1 Chess board</h3>
+    <div class="task__wrap">
+        <div class="chess__form">
+            <form id="chessForm" class="">
+                <div class="col mt-1">
+                    <label for="inputLength" class="col-form-label ">Board length</label>
+                </div>
+                <div class="col-auto mt-1">
+                    <input type="number" id="inputLength" class="form-control" placeholder="length">
+                </div>
+                <div class="col-auto mt-1">
+                    <label for="inputWidth" class="col-form-label ">Board width</label>
+                </div>
+                <div class="col-auto mt-1">
+                    <input type="number" id="inputWidth" class="form-control" placeholder="width">
+                </div>
+                <div class="col-auto mt-1">
+                    <label for="inputSymbol" class="col-form-label ">Symbol</label>
+                </div>
+                <div class="col-auto mt-1">
+                    <input type="text" id="inputSymbol" class="form-control" placeholder="symbol">
+                </div>
+                <div class="col lg-3 mt-4">
+                    <button type="button" id="chessBuilder" class="btn btn-secondary mb-3">Get chess desk</button>
+                </div>
+            </form>
+        </div>
+        <div id="chess__board" class="chess__desk">
+        </div>
+    </div>
+
+    <div id="mocha"></div>
+
 <script src="./main.js" type="module"></script>
+<script src="tests/test_main.js" type="module"></script>
 </body>
 </html>

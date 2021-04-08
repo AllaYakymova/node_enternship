@@ -1,9 +1,45 @@
-.chess-desk {
+
+h3 {
+    padding-left: 2rem;
+    padding-top: 1rem;
+    margin-top: 1rem;
+}
+.task__wrap {
+    padding-left: 2rem;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.chess__form {
+    display: flex;
+    flex-direction: column;
+    font-size: 14px;
+    width: 12rem;
+    align-items: center;
+}
+
+.chess__desk {
+    margin-left: 3rem;
+    min-width: 20rem;
+    min-height: 20rem;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     padding: 10px;
-    /*border: 1px solid #1d1eff;*/
-    line-height: 50%;
-    font-size: 16px;
+    border: 2px solid #6c757d;
+    line-height: 0.8;
+    letter-spacing: 5px;
+    font-size: 10px;
+    overflow-x: hidden;
+}
+.envelopes__form {
+    display: flex;
+}
+
+.result__board {
+    margin-left: 2rem;
+    padding: 1rem;
+    border: 2px solid #6c757d;
+    width: 20rem;
+    font-size: 15px;
 }
