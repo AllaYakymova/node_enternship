@@ -1,15 +1,15 @@
 'use strict';
-import validSchema from './validSchema.js';
+const {validSchema} = require('./validSchema.js');
 
 exports.ChessBoard = class ChessBoard {
-// export class ChessBoard {
+// export default class ChessBoard {
   constructor(length, width, symbol) {
     this.length = length;
     this.width = width;
     this.symbol = symbol;
   }
 
-  board = document.getElementById('chess__board');
+  // board = document.getElementById('chess__board');
 
   validation = () => {
     const _1 = validSchema.isInteger(this.length);
@@ -27,17 +27,18 @@ exports.ChessBoard = class ChessBoard {
   };
 
   buildString = () => {
+
     let isValid = this.validation(this.length, this.width, this.symbol);
     if (typeof isValid === 'object') return JSON.stringify(isValid);
     if (isValid) {
-      let pattern = `${this.symbol}\u00A0`;
+      let pattern = `${this.symbol}&nbsp;`;
       let br = '<br>';
       let res = '';
       for (let row = 1; row <= this.length; row++) {
         let str = '';
         if (this.width % 2 === 0) {
           if (row % 2 === 0) {
-            str = `\u00A0${pattern.repeat((this.width - 1) / 2)}${this.symbol}`;
+            str = `&nbsp;${pattern.repeat((this.width - 1) / 2)}${this.symbol}`;
           } else {
             str = pattern.repeat((this.width) / 2);
           }
@@ -45,7 +46,7 @@ exports.ChessBoard = class ChessBoard {
           if (row % 2 !== 0) {
             str = `${pattern.repeat((this.width - 1) / 2)}${this.symbol}`;
           } else {
-            str = `\u00A0${pattern.repeat((this.width) / 2)}`;
+            str = `&nbsp;${pattern.repeat((this.width) / 2)}`;
           }
         }
         res = res + str + br;
@@ -54,39 +55,39 @@ exports.ChessBoard = class ChessBoard {
     }
   };
 
-  getData = () => {
-    let form = document.getElementById('chessForm');
-    this.length = document.getElementById('inputLength').value;
-    this.width = document.getElementById('inputWidth').value;
-    this.symbol = document.getElementById('inputSymbol').value;
-    if (this.symbol.length > 1) this.symbol = this.symbol.slice(0, 1);
-    form.reset();
-  };
+  // getData = () => {
+  //   let form = document.getElementById('chessForm');
+  //   this.length = document.getElementById('inputLength').value;
+  //   this.width = document.getElementById('inputWidth').value;
+  //   this.symbol = document.getElementById('inputSymbol').value;
+  //   if (this.symbol.length > 1) this.symbol = this.symbol.slice(0, 1);
+  //   form.reset();
+  // };
 
   implementBoard = () => {
-    let input = false;
-    if (!this.width && !this.length && !this.symbol) {
-      this.getData();
-      input = true;
-    }
-    if (this.board) this.board.innerHTML = '';
+    // let input = false;
+    // if (!this.width && !this.length && !this.symbol) {
+    //   this.getData();
+    //   input = true;
+    // }
+    // if (this.board) this.board.innerHTML = '';
     let chessDeskString = this.buildString();
     if (typeof chessDeskString === 'object') {
       return JSON.stringify(chessDeskString);
     } else {
-      if(input) {
-        this.board.insertAdjacentHTML('beforeend', `<span>${chessDeskString}</span>`);
-        this.length = null;
-        this.width = null;
-        this.symbol = '';
-      } else {
+      // if(input) {
+      //   this.board.insertAdjacentHTML('beforeend', `<span>${chessDeskString}</span>`);
+      //   this.length = null;
+      //   this.width = null;
+      //   this.symbol = '';
+      // } else {
         return chessDeskString
       }
-    }
+    // }
   };
 
-  listener = () => {
-    document.getElementById('chessBuilder')
-      .addEventListener('click', this.implementBoard);
-  };
+  // listener = () => {
+  //   document.getElementById('chessBuilder')
+  //     .addEventListener('click', this.implementBoard);
+  // };
 };

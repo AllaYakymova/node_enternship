@@ -1,6 +1,6 @@
 'use strict';
 
-const validSchema = {
+exports.validSchema = {
   isInteger: function (num, is0= false) {
     return Number.isInteger(+num) || (is0 && +num === 0) ? true : { status: 'failed', reason: `Number ${num} is not an integer`};
   },
@@ -65,4 +65,4 @@ const validSchema = {
 };
 
 
-export default validSchema;
+// export default validSchema;

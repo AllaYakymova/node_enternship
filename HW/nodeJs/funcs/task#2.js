@@ -1,8 +1,7 @@
 'use strict';
-import validSchema from './validSchema.js';
+const {validSchema} = require('./validSchema.js');
 
 exports.compareEnvelopes  = function (env1, env2) {
-// export const compareEnvelopes  = function (env1, env2) {
   const valid = (env1, env2) => {
     let _1 = validEnvElements(Object.values(env1));
     let _2 = validEnvElements(Object.values(env2));
@@ -47,7 +46,7 @@ exports.compareEnvelopes  = function (env1, env2) {
   } else {
     return JSON.stringify(isValid);
   }
-}
+};
 
 function validation([h, w]) {
   const _1 = validSchema.isNumber(w);
