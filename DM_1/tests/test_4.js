@@ -29,5 +29,11 @@ export default function test_4() {
     it('Length of entered value is longer then max', () => {
       assert.equal(findPalindrom(12223454443123223), '{"status":"failed","reason":"12223454443123224 is longer then max 16"}');
     });
+    it('Several palindroms return just one', () => {
+      assert.equal(findPalindrom(1222345444223), 222);
+    });
+    it('Several palindroms return just one', () => {
+      assert.equal(findPalindrom(12223454444223), 4444);
+    });
   });
 }

@@ -22,10 +22,10 @@ const lastIndexOf = (str, substr, fromIndex ) => {
   }
 };
 
-// console.log(lastIndexOf("С5ини,5й кит, каси,5тка", 5));
-// console.log(lastIndexOf("канал", "а", 2));
-// console.log(lastIndexOf("канал", "а", 0));
-// console.log(lastIndexOf("канал", "а,"));
+console.log(lastIndexOf("С5ини,5й кит, каси,5тка", 5));
+console.log(lastIndexOf("канал", "а", 2));
+console.log(lastIndexOf("канал", "а", 0));
+console.log(lastIndexOf("канал", "а,"));
 
 
 
@@ -33,26 +33,19 @@ const lastIndexOf = (str, substr, fromIndex ) => {
 //includes
 const includes = (str, substr) => !!str.match(substr);
 
-// console.log(includes("qwerty", 'Er'));
+// console.log(includes("qwerty", 'er'));
 
 
 // repeat
 const repeat = (str, count) => {
   let newString = "";
-  if(count < 0) {
-    console.error('Refer Error')
-  } else if(count === 0) {
-    return newString;
-  }
   for (let i = 0; i <= count; i++) {
     newString = newString + str;
   }
   return newString;
 };
 
-console.log(repeat("qwerty", 3));
-console.log(repeat("qwerty", 0));
-console.log(repeat("qwerty", -1));
+// console.log(repeat("qwerty", 3));
 
 
 // substr
