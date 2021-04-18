@@ -24,3 +24,7 @@ id BIGINT NOT NULL PRIMARY KEY, name VARCHAR(50), surname VARCHAR(50), login VAR
 
 // Изменение таблицы
 // let changeColumnTable = sendQueryDB('ALTER TABLE users ADD UNIQUE(login)', `ALTER TABLE users ADD UNIQUE(login)`).then(res => console.log(res));
+
+`select count(login) from users where login = '${authUser.login}' AND password = ${authUser.password}`
+
+// let CheckData = sendQueryDB(`select count(login) from users where login = '${authUser.login}' AND password = ${authUser.password}`).then(res => console.log(res));

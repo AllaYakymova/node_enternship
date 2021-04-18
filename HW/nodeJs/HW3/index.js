@@ -3,9 +3,8 @@ const url = require('url'); //url parser module
 const fs = require('fs'); // files system
 const {client} = require('./bd/db_connect');
 const {addNewUser} = require('./registration/reg_func');
-const {checkUser} = require('./autharization/auth_func');
+const {checkAuth} = require('./autharization/auth_func');
 const {answer} = require('./helpers/answer');
-
 
 client
   .connect()
@@ -18,7 +17,6 @@ http.createServer((req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Headers', '*');
   res.setHeader('Access-Control-Allow-Credential', 'true');
-  // res.writeHead(200);
 
   const query = url.parse(req.url, true).query;
   const {type} = query;
@@ -32,7 +30,7 @@ http.createServer((req, res) => {
     }
     case 'auth' : {
       const {login, password} = query;
-      checkUser(login, password, client, res);
+      checkAuth(login, password, client, res);
       break;
     }
     default: {
