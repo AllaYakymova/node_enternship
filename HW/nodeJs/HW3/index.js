@@ -1,15 +1,16 @@
 const http = require('http'); //HTTP-модуль
 const url = require('url'); //url parser module
-const fs = require('fs'); // files system
 const {client} = require('./bd/db_connect');
 const {addNewUser} = require('./registration/reg_func');
 const {checkAuth} = require('./autharization/auth_func');
+const {validationSchema} = require('./helpers/validation');
 const {answer} = require('./helpers/answer');
 
 client
   .connect()
   .then(() => console.log('connected'))
   .catch(err => console.error('connection error', err.stack));
+
 
 http.createServer((req, res) => {
 
@@ -25,7 +26,12 @@ http.createServer((req, res) => {
   switch (type) {
     case 'reg' : {
       const {name, surname, login, email, dob, password} = query;
-      addNewUser(name, surname, login, email, dob, password, client, res);
+      let isValid = validationSchema(name, surname, login, email, dob, password);
+      if(isValid) {
+        addNewUser(name, surname, login, email, dob, password, client, res);
+      } else {
+        answer(res, 406, 'Registration data is not valid')
+      }
       break;
     }
     case 'auth' : {
@@ -38,14 +44,7 @@ http.createServer((req, res) => {
     }
   }
 })
-  .listen(8080, () => {
-
-  });
-
-// server.close(err => client.end(err => {
-//   if(err) console.log(err);
-//   console.log('client.end')
-// }));
+  .listen(8080);
 
 
 console.log('Server on http://localhost:8080');

@@ -16,15 +16,15 @@ const sendQueryDB = async (query, str) => {
 
 // Создание таблицы
 const queryTable = `CREATE TABLE users (
-id BIGINT NOT NULL PRIMARY KEY, name VARCHAR(50), surname VARCHAR(50), login VARCHAR(50) NOT NULL, email  VARCHAR(50), date_of_birth DATE, password VARCHAR(50) NOT NULL );`;
+id BIGINT NOT NULL PRIMARY KEY, name VARCHAR(50), surname VARCHAR(50), login VARCHAR(50) NOT NULL, email  VARCHAR(50), date_of_birth DATE(1/8/1999), password VARCHAR(50) NOT NULL );`;
 // let createTable = sendQueryDB(queryTable, `Table created successfully`).then(res => console.log(res));
 
 // Очищение таблицы
-// let clearTable = sendQueryDB(`DELETE FROM users`, `Table cleared successfully`).then(res => console.log(res));
+// sendQueryDB(`DELETE FROM users`, `Table cleared successfully`).then(res => console.log(res));
 
 // Изменение таблицы
 // let changeColumnTable = sendQueryDB('ALTER TABLE users ADD UNIQUE(login)', `ALTER TABLE users ADD UNIQUE(login)`).then(res => console.log(res));
 
-`select count(login) from users where login = '${authUser.login}' AND password = ${authUser.password}`
 
-// let CheckData = sendQueryDB(`select count(login) from users where login = '${authUser.login}' AND password = ${authUser.password}`).then(res => console.log(res));
+// https://stackoverflow.com/questions/24301939/postgresql-cast-string-to-date-dd-mm-yyyy
+

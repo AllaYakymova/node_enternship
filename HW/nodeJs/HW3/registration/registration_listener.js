@@ -20,5 +20,5 @@ document.querySelector('.form-reg').addEventListener('submit', (ev) => {
 
   fetch(`http://localhost:8080?type=reg&name=${name}&surname=${surname}&login=${login}&email=${email}&dob=${dob}&password=${password}`)
     .then(res => res.text())
-    .then(console.log);
+    .then();
 });

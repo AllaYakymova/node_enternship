@@ -1,4 +1,3 @@
-const {answer} = require('../helpers/answer');
 const {addNewUserToBd} = require('../bd/reg_query');
 
 exports.addNewUser = function (name, surname, login, email, dob, password, client, res) {
@@ -11,7 +10,7 @@ exports.addNewUser = function (name, surname, login, email, dob, password, clien
     password: password,
   };
   try {
-    addNewUserToBd(user, client, res).then(() => console.log('query is done'))
+    addNewUserToBd(user, client, res).then(() => console.log('Reg query is done'))
   } catch (err) {
     console.log(err);
   }
