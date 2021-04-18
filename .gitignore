@@ -6,6 +6,9 @@ package-lock.json
 #cache
 .eslintcache
 
+# production
+.env
+
 .idea/
 *.iml
 *.xml

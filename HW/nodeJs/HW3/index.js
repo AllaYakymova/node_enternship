@@ -2,10 +2,9 @@ const http = require('http'); //HTTP-модуль
 const url = require('url'); //url parser module
 const fs = require('fs'); // files system
 const {client} = require('./bd/db_connect');
-const { addNewUser } = require('./registration/reg_func');
-const  { checkUser } = require('./autharization/auth_func');
-const { answer } = require('./helpers/answer');
-const {addNewUserToBd} = require('./bd/db_queries');
+const {addNewUser} = require('./registration/reg_func');
+const {checkUser} = require('./autharization/auth_func');
+const {answer} = require('./helpers/answer');
 
 
 client
@@ -13,15 +12,13 @@ client
   .then(() => console.log('connected'))
   .catch(err => console.error('connection error', err.stack));
 
-const server = http.createServer((req, res) => {
+http.createServer((req, res) => {
 
-
-  res.writeHead(200, {
-    'Content-Type': 'text/html',
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': '*',
-    'Access-Control-Allow-Credential': 'true',
-  });
+  res.setHeader('Content-Type', 'text/html');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Headers', '*');
+  res.setHeader('Access-Control-Allow-Credential', 'true');
+  // res.writeHead(200);
 
   const query = url.parse(req.url, true).query;
   const {type} = query;
@@ -29,34 +26,23 @@ const server = http.createServer((req, res) => {
   // обработка полученных данных
   switch (type) {
     case 'reg' : {
-      try {
-        const {name, surname, login, email, dob, password} = query;
-        addNewUser(name, surname, login, email, dob, password, client, res);
-      } catch (e) {
-        console.log(e);
-      } finally {
-        // client.end(err => console.log('client.end'))
-      }
+      const {name, surname, login, email, dob, password} = query;
+      addNewUser(name, surname, login, email, dob, password, client, res);
       break;
     }
     case 'auth' : {
       const {login, password} = query;
-      checkUser(login, password, res);
+      checkUser(login, password, client, res);
       break;
     }
-    // case 'rename' : {
-    //   fs.rename('users.json', './rename.json', err => {
-    //     console.log('Renamed');
-    //     answer(res, 202, 'Renamed');
-    //   });
-    // }
     default: {
       answer(res, 'Error in request type');
     }
   }
-  // client.end()
 })
-  .listen(8080);
+  .listen(8080, () => {
+
+  });
 
 // server.close(err => client.end(err => {
 //   if(err) console.log(err);
@@ -93,7 +79,6 @@ console.log('Server on http://localhost:8080');
 //   answer('Added new user', 200)
 // : answer('Problem with registration', 406);
 // })
-
 
 
 // http://localhost:8080/?name=Alla&surname=Ya&password=ewew&email=qwerty&dob=123
