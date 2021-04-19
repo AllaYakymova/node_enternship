@@ -11,11 +11,12 @@ exports.validationSchema = function (...arg) {
     login: login && login.length >= 1 && login.length <= 50,
     email: email && regEmail.test(email),
     dob: Date.parse(date) < Date.parse(now),
-    password: password && regPassword.test(password)
+    password: password && regPassword.test(password),
   };
   console.log(isValid);
 
-  return !Object.values(isValid).some(el => el !== true);
+  return !Object.values(isValid)
+    .some(el => el !== true);
 };
 
 

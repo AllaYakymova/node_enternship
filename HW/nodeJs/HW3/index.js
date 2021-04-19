@@ -1,8 +1,8 @@
 const http = require('http'); //HTTP-модуль
 const url = require('url'); //url parser module
-const {client} = require('./bd/db_connect');
+const {client} = require('./db/db_connect');
 const {addNewUser} = require('./registration/reg_func');
-const {checkAuth} = require('./autharization/auth_func');
+const {checkAuth} = require('./authorization/auth_func');
 const {validationSchema} = require('./helpers/validation');
 const {answer} = require('./helpers/answer');
 
@@ -10,7 +10,6 @@ client
   .connect()
   .then(() => console.log('connected'))
   .catch(err => console.error('connection error', err.stack));
-
 
 http.createServer((req, res) => {
 
@@ -27,10 +26,11 @@ http.createServer((req, res) => {
     case 'reg' : {
       const {name, surname, login, email, dob, password} = query;
       let isValid = validationSchema(name, surname, login, email, dob, password);
-      if(isValid) {
-        addNewUser(name, surname, login, email, dob, password, client, res);
+      if (isValid) {
+        addNewUser(name, surname, login, email, dob, password, client, res)
+          .then(() => console.log('Reg query is done'));
       } else {
-        answer(res, 406, 'Registration data is not valid')
+        answer(res, 406, 'Registration data is not valid');
       }
       break;
     }

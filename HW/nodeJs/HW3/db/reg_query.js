@@ -13,7 +13,7 @@ exports.addNewUserToBd = async function (user, client, res) {
 
     const resultLogin = await client.query(checkLogin);
     const resultEmail = await client.query(checkEmail);
-
+    console.log(resultLogin.rows[0].count, resultEmail.rows[0].count);
     const isExist = [+resultLogin.rows[0].count, +resultEmail.rows[0].count].some(e => e !== 0);
 
     if (!isExist) {

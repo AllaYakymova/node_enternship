@@ -16,9 +16,10 @@ document.querySelector('.form-reg').addEventListener('submit', (ev) => {
   const login = inputs.login.value;
   const email = inputs.email.value;
   const dob = inputs.dob.value;
+  const dobCorrected = `${dob.slice(0,4)}/${dob.slice(5,7)}/${dob.slice(-2)}`;
   const password = inputs.password.value;
 
-  fetch(`http://localhost:8080?type=reg&name=${name}&surname=${surname}&login=${login}&email=${email}&dob=${dob}&password=${password}`)
+  fetch(`http://localhost:8080?type=reg&name=${name}&surname=${surname}&login=${login}&email=${email}&dob=${dobCorrected}&password=${password}`)
     .then(res => res.text())
     .then();
 });

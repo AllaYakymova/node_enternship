@@ -1,4 +1,4 @@
-const {client} = require('../bd/db_connect');
+const {client} = require('./db_connect');
 
 // Общая функция запросов
 const sendQueryDB = async (query, str) => {
@@ -20,7 +20,7 @@ id BIGINT NOT NULL PRIMARY KEY, name VARCHAR(50), surname VARCHAR(50), login VAR
 // let createTable = sendQueryDB(queryTable, `Table created successfully`).then(res => console.log(res));
 
 // Очищение таблицы
-// sendQueryDB(`DELETE FROM users`, `Table cleared successfully`).then(res => console.log(res));
+// sendQueryDB(`DELETE FROM users WHERE id > 1618814687408`, `Table cleared successfully`).then(res => console.log(res));
 
 // Изменение таблицы
 // let changeColumnTable = sendQueryDB('ALTER TABLE users ADD UNIQUE(login)', `ALTER TABLE users ADD UNIQUE(login)`).then(res => console.log(res));

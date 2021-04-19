@@ -1,4 +1,4 @@
-const {checkAuthInBd} = require('../bd/auth_query');
+const {checkAuthInBd} = require('../db/auth_query');
 
 exports.checkAuth = function (login, password, client, res) {
   const authUser = {
