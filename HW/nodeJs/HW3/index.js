@@ -50,6 +50,10 @@ http.createServer((req, res) => {
 console.log('Server on http://localhost:8080');
 
 
+
+
+
+
 // async function actionsWithAuthData(userData, type, res) {
 //   console.log(JSON.stringify(userData));
 //  await fs.readFile('users.json', (err, data) => {
