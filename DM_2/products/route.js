@@ -1,5 +1,5 @@
 const express = require("express");
-const router = express.Router();
+const route = express.Router();
 const {
   getProducts,
   getProductById,
@@ -11,18 +11,18 @@ const {
 
 // @route   GET /products
 // @desc    GET all existing products
-router.get("/", getProducts);
+route.get("/products", getProducts);
 
-// @route   GET /products/filter
-// @desc    GET appropriate filtered products (categories, manufactures)???
-router.get("/filter", getProductsFilterParams);
+// // @route   GET /products/filter
+// // @desc    GET appropriate filtered products (categories, manufactures)???
+// route.get("/filter", getProductsFilterParams);
 
 // @route   POST /products/search
 // @desc    POST appropriate to search query products (categories, products, manufactures)
-router.get("/search", searchProducts);
+route.get("/products/search", searchProducts);
 
 // @route   GET /products/:id
 // @desc    GET existing product by id
-router.get("/:productId", getProductById);
+route.get("/products/:productId", getProductById);
 
-module.exports = router;
+// module.exports = route;

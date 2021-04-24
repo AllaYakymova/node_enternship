@@ -23,10 +23,17 @@
     "url": "https://github.com/AllaYakymova/node_internship/issues"
   },
   "homepage": "https://github.com/AllaYakymova/node_internship#readme",
+  "engines": {
+    "node": "14.16.0"
+  },
   "dependencies": {
-    "express": "^4.17.1"
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "nodemailer": "^6.5.0",
+    "pg": "^8.6.0"
   },
   "devDependencies": {
+    "dotenv": "^8.2.0",
     "nodemon": "^2.0.7"
   }
 }
