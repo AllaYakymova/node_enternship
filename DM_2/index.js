@@ -6,49 +6,45 @@ const port = process.env.PORT || 3000;
 const {
   getProducts,
   getProductById,
-  getProductsFilterParams,
   searchProducts
 } = require("./products/controller"); //import controllers
 
+const productRouter = require('./products/router');
+// const orders = require('./orders/route');
+
+// connect to postgrsql
 client
   .connect()
   .then(() => console.log('connected'))
   .catch(err => console.error('connection error', err.stack));
 
-// const products = require('./products/route');
-// const orders = require('./orders/route');
 
 // body parser middleware
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({extended: false}));
 // app.use(cors());
 
-// DB Config
-
-// Connect to postgresql
 
 // use routes
-app.get('/products', (req, res) => {
-  try {
-    const query = `SELECT products.id, product_name, manufactures.manufacture, categories.category FROM products, categories, manufactures WHERE products.id_manufacture = manufactures.id AND products.id_category = categories.id ORDER BY product_name ASC;`;
-    client.query(query, (error, results) => {
-      if (error) {
-        throw error
-      }
-      console.log(results.rows);
-      res.send(JSON.stringify({status: 'ok', data: results.rows, message: ''}));
-    });
-  } catch (err) {
-    throw err
-  }
-});
-// app.get("/products/search", searchProducts);
-// app.get("/products/:productId", getProductById);
-// app.use('/api/orders', orders);
+app.use('/products', productRouter);
+// app.use("/products/:productId", getProductById);
+// app.use("/products/search", searchProducts);
+// app.get('/products', (req, res) => getProducts(req, res));
 
-app.get("/", function(req, res){
-  // отправляем ответ
-  res.send("<h2>Привет Express!</h2>");
+// app.get('/products', async (req, res) => {
+//     try {
+//       const query = `SELECT products.id, product_name, manufactures.manufacture, categories.category FROM products, categories, manufactures WHERE products.id_manufacture = manufactures.id AND products.id_category = categories.id ORDER BY product_name ASC;`;
+//       const result = await client.query(query);
+//       await console.log(res.rows);
+//       await res.send(JSON.stringify({status: 'ok', data: result.rows, message: 'Here is your products'}));
+//     } catch (err) {
+//       res.send(JSON.stringify({status: 'Not ok', message: err.stack}));
+//     }
+// });
+
+
+app.use("/", (req, res) => {
+  res.send("<h2>DEMO #2</h2>");
 });
 
 // start server
