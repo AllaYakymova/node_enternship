@@ -1,16 +1,12 @@
 const express = require('express');
+const cors = require('cors');
 const bodyParser = require('body-parser');
 const {client} = require('./config');
 const app = express();
-const port = process.env.PORT || 3000;
-const {
-  getProducts,
-  getProductById,
-  searchProducts
-} = require("./products/controller"); //import controllers
+const port = process.env.PORT || 8080;
 
 const productRouter = require('./products/router');
-// const orders = require('./orders/route');
+const orderRouter = require('./orders/router');
 
 // connect to postgrsql
 client
@@ -21,15 +17,15 @@ client
 
 // body parser middleware
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false}));
-// app.use(cors());
+// app.use(bodyParser.urlencoded({extended: false}));
+// создаем парсер для данных application/x-www-form-urlencoded
+// const urlencodedParser = bodyParser.urlencoded({extended: false});
+app.use(cors());
 
 
 // use routes
 app.use('/products', productRouter);
-// app.use("/products/:productId", getProductById);
-// app.use("/products/search", searchProducts);
-// app.get('/products', (req, res) => getProducts(req, res));
+app.use('/order', orderRouter);
 
 // app.get('/products', async (req, res) => {
 //     try {

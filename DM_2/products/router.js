@@ -12,7 +12,7 @@ const {
 productRouter.get("/", getProducts);
 
 // @route   GET /products/search
-// GET appropriate to search query products ( by categories.id, products, manufactures)
+// GET appropriate to search query products (by categories.id, products, manufactures)
 productRouter.use("/search", searchProducts);
 
 // @route   GET /products/:id
