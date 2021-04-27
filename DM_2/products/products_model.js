@@ -17,7 +17,7 @@ module.exports = class ProductsModel {
 
   async getProductById() {
     try {
-      const {productId} = this.req.params;
+      const { productId } = this.req.params;
       const query = `SELECT products.id, product_name, manufactures.manufacture, categories.category, ingridients, units.unit, price, img_link FROM products, categories, manufactures, units WHERE products.id = $1 AND products.id_manufacture = manufactures.id AND products.id_category = categories.id AND products.id_units = units.id;`;
 
       const result = await client.query(query, [productId]);
@@ -29,7 +29,7 @@ module.exports = class ProductsModel {
 
   async searchProducts() {
     try {
-      const {manufactures, categories, products} = this.req.query;
+      const { manufactures, categories, products } = this.req.query;
       const reg = /^([1-9,]*)$/;
       let arg = [];
       const scheme = {

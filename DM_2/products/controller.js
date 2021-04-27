@@ -1,53 +1,53 @@
-const { client } = require('../config');
-const { productsModel } = require('./products_model');
+const ProductsModel = require('./products_model');
 const { corsDefender } = require('../helpers/cors_defender');
+const ViewsClass = require('../view/index');
 
-
-exports.getProducts = async function (req, res) {
-  try {
-    corsDefender(res);
-    const result = await client.query(productsModel(req));
-    await res.status(200).json({status: 'ok', data: result.rows, message: 'Here is all products'});
-  } catch (err) {
-    res.status(400).json({status: 'not ok', message: err.stack});
+module.exports = class ProductsController {
+  constructor(req, res) {
+    this.req = req;
+    this.res = res;
+    this.productsModel = new ProductsModel(req);
+    this.view = new ViewsClass(res);
   }
-};
 
-exports.searchProducts = async function (req, res) {
-  try {
-    corsDefender(res);
-    if(!Object.values(req.query).filter(el => el).length) res.redirect("/products"); // if req.queries are empty - redirect to /products
-    const result = await client.query(productsModel(req));
-    const data = result.rows;
-    if (data.length !== 0) {
-      await res.status(200).json({ status: 'ok', data: result.rows, message: `Products satisfying the query request. Amount: ${result.rows.length}`});
-    } else {
-      await res.status(200).json({ status: 'ok', data: result.rows, message: `There is no products satisfying the query request`,
-      });
+  async getProducts() {
+    try {
+      const data = this.productsModel.getAllProducts();
+      this.view.okView(this.res, {data: data}, 'Here is all products')
+    } catch (err) {
+      this.view.errorView(err)
     }
-  } catch (err) {
-    res.status(400).json({status: 'not ok', message: err.stack});
   }
-};
 
-exports.getProductById = async function (req, res) {
-  try {
-    corsDefender(res);
-    const {productId} = req.params;
-    const result = await client.query(productsModel(req), [productId]);
-    const data = result.rows;
-    if (data.length !== 0) {
-    await res.status(200).json({ status: 'ok', data: result.rows,  message: `Here is product with id ${productId}`,
-    });
+  async getProductById() {
+    try {
+      const {productId} = this.req.params;
+      let data = this.productsModel.searchProducts();
+      if (data.length !== 0) {
+        this.view.okView(this.res, {data: data}, `Product with id ${productId}`);
       } else {
-      await res.status(200).json({ status: 'ok', data: result.rows, message: `No product with id ${productId}`,
-      });
+        this.view.okView(this.res, {data: data}, `No product with id ${productId}`);
+      }
+    } catch (err) {
+      this.view.errorView(err)
     }
-  } catch (err) {
-    res.status(400).json({ status: 'not ok', message: err.stack});
+  }
+
+  async searchProducts() {
+    try {
+      if (!Object.values(this.req.query)
+        .filter(el => el).length) this.res.redirect("/products");
+      const data = this.productsModel.getProductById();
+      if (data.length !== 0) {
+        this.view.okView(this.res, {data: data}, `Products satisfying the query request. Amount: ${data.length}`);
+      } else {
+        this.view.okView(this.res, {data: data}, `There is no products satisfying the query request`);
+      }
+    } catch (err) {
+      this.view.errorView(err)
+    }
   }
 };
-
 
 
 
