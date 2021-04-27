@@ -32,24 +32,23 @@ module.exports = class ProductsModel {
     try {
       const { manufactures, categories, products } = this.req.query;
       const reg = /^([1-9,]*)$/;
-      let arg = [];
+      let args = [];
       const scheme = {
         'manufactures.manufacture': !!manufactures && manufactures,
-        'categories.id': !!categories && reg.test(categories) ? categories.split(',')
-          .filter(el => el) : false,
+        'categories.id': !!categories && reg.test(categories) ? categories.split(',').filter(el => el) : false,
         'product_name': !!products && products,
       };
 
         for (let query in scheme) {
           if (scheme[query]) {
             if (query === 'categories.id') {
-              arg.push(`${query} IN (${scheme[query]})`);
+              args.push(`${query} IN (${scheme[query]})`);
             } else {
-              arg.push(`${query} ILIKE '${scheme[query]}%'`);
+              args.push(`${query} ILIKE '${scheme[query]}%'`);
             }
           }
       }
-      const condition = arg.length !== 0 ? `AND ${arg.join(' AND ')}` : '';
+      const condition = args.length !== 0 ? `AND ${args.join(' AND ')}` : '';
       const query = `SELECT products.id, product_name, manufactures.manufacture, categories.category, units.unit, price, img_link FROM products, categories, manufactures, units WHERE products.id_manufacture = manufactures.id AND products.id_category = categories.id AND products.id_units = units.id ${condition};`;
       const result = await client.query(query);
       return result.rows;

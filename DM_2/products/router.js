@@ -10,7 +10,7 @@ productRouter.get("/", (req, res) => {
   return newProductsController.getProducts()
 });
 
-// route   GET /products/search
+// route  GET /products/search
 // GET appropriate to search query products (by categories.id, products, manufactures)
 productRouter.use("/search", (req, res) => {
   const newProductsController = new ProductsController(req, res);

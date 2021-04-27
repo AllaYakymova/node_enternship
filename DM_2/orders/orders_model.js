@@ -6,14 +6,11 @@ module.exports = class OrdersModel {
     this.customer_phone = req.body.user.phone;
     this.customer_email = req.body.user.email;
     this.products = req.body.products;
-    // this.order_id;
     this.order = [];
     this.req = req;
   }
 
-  reqNoBody() {
-    if (!this.req.body) return false
-  }
+  reqNoBody = () => !!this.req.body;
 
   async createOrder() {
     try {
@@ -69,7 +66,7 @@ module.exports = class OrdersModel {
     try {
       const user = await this.getOrderCustomerInfo();
       const queryOrderInfo = `
-      SELECT products.product_name, order_item.quantity 
+      SELECT products.id, order_item.quantity 
       FROM products, order_item 
       WHERE order_item.order_id = $1 AND order_item.product_id = products.id`;
       const orderInfo = await client.query(queryOrderInfo, [this.order_id]);
@@ -86,7 +83,7 @@ module.exports = class OrdersModel {
       FROM products, order_item 
       WHERE order_item.order_id = $1 AND order_item.product_id = products.id`;
       const orderDetailInfo = await client.query(queryOrderDetailInfo, [this.order_id]);
-      return {details: orderDetailInfo.rows};
+      return orderDetailInfo.rows;
     } catch (e) {
       console.log(e);
     }

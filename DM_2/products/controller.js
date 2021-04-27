@@ -1,6 +1,5 @@
 const ProductsModel = require('./products_model');
-const { corsDefender } = require('../helpers/cors_defender');
-const ViewsClass = require('../view/index');
+const ViewsClass = require('../view/view_class');
 
 module.exports = class ProductsController {
   constructor(req, res) {
