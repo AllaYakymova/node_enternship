@@ -8,6 +8,7 @@ module.exports = class ProductsModel {
   async getAllProducts() {
     try {
       const query = `SELECT products.id, product_name, manufactures.manufacture, categories.category FROM products, categories, manufactures WHERE products.id_manufacture = manufactures.id AND products.id_category = categories.id ORDER BY product_name ASC;`;
+
       const result = await client.query(query);
       return result.rows;
     } catch (e) {
@@ -39,8 +40,6 @@ module.exports = class ProductsModel {
         'product_name': !!products && products,
       };
 
-      if (Object.values(scheme)
-        .filter(el => el).length !== 0) {
         for (let query in scheme) {
           if (scheme[query]) {
             if (query === 'categories.id') {
@@ -49,10 +48,9 @@ module.exports = class ProductsModel {
               arg.push(`${query} ILIKE '${scheme[query]}%'`);
             }
           }
-        }
       }
       const condition = arg.length !== 0 ? `AND ${arg.join(' AND ')}` : '';
-      const query = `SELECT products.id, product_name, manufactures.manufacture, categories.category, units.unit, price, img_link FROM products, categories, manufactures, units WHERE products.id_manufacture = manufactures.id AND products.id_category = categories.id AND products.id_units = units.id ${condition};`; // проверить внести аругментом
+      const query = `SELECT products.id, product_name, manufactures.manufacture, categories.category, units.unit, price, img_link FROM products, categories, manufactures, units WHERE products.id_manufacture = manufactures.id AND products.id_category = categories.id AND products.id_units = units.id ${condition};`;
       const result = await client.query(query);
       return result.rows;
     } catch (e) {

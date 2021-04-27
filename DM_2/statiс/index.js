@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
           data.forEach(el => {
             let option = document.createElement('option');
             option.setAttribute('value', `${el.id}`);
-            option.append(el.id);
+            option.append(el.product_name);
             fragment.append(option);
           });
         } else {
@@ -41,11 +41,13 @@ let order = [];
 addToCartButton.addEventListener('click', e => {
   const productId = productsIdOptions.value;
   const count = productsCountOptions.value;
+  console.log(productId);
   order.push({id: productId, count: count});
   fetch(`http://localhost:8080/products/${productId}`)
     .then(res => res.json())
     .then(res => {
       const data = res.data[0];
+      console.log(data);
       cartBoard.insertAdjacentHTML('beforeend', `<p>Name: ${data.product_name}</p><p>Manufacture: ${data.manufacture}</p><p>Price: ${data.price}</p><p>Count: ${count}</p>`);
     })
     .catch(err => console.log(err));

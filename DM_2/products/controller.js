@@ -12,8 +12,8 @@ module.exports = class ProductsController {
 
   async getProducts() {
     try {
-      const data = this.productsModel.getAllProducts();
-      this.view.okView(this.res, {data: data}, 'Here is all products')
+      const data = await this.productsModel.getAllProducts();
+      await this.view.okView(this.res, data, 'Here is all products')
     } catch (err) {
       this.view.errorView(err)
     }
@@ -21,12 +21,14 @@ module.exports = class ProductsController {
 
   async getProductById() {
     try {
-      const {productId} = this.req.params;
-      let data = this.productsModel.searchProducts();
+      const { productId } = this.req.params;
+      console.log(productId);
+      let data = await this.productsModel.getProductById();
+      console.log(data);
       if (data.length !== 0) {
-        this.view.okView(this.res, {data: data}, `Product with id ${productId}`);
+        await this.view.okView(this.res, data, `Product with id ${productId}`);
       } else {
-        this.view.okView(this.res, {data: data}, `No product with id ${productId}`);
+        await this.view.okView(this.res, data, `No product with id ${productId}`);
       }
     } catch (err) {
       this.view.errorView(err)
@@ -35,13 +37,12 @@ module.exports = class ProductsController {
 
   async searchProducts() {
     try {
-      if (!Object.values(this.req.query)
-        .filter(el => el).length) this.res.redirect("/products");
-      const data = this.productsModel.getProductById();
+      if (!Object.values(this.req.query).filter(el => el).length) this.res.redirect("/products"); // redirection if no query
+      const data = await this.productsModel.searchProducts();
       if (data.length !== 0) {
-        this.view.okView(this.res, {data: data}, `Products satisfying the query request. Amount: ${data.length}`);
+        await this.view.okView(this.res, data, `Products satisfying the query request. Amount: ${data.length}`);
       } else {
-        this.view.okView(this.res, {data: data}, `There is no products satisfying the query request`);
+        await this.view.okView(this.res, data, `There is no products satisfying the query request`);
       }
     } catch (err) {
       this.view.errorView(err)
