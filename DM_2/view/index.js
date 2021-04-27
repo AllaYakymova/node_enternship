@@ -1,5 +1,5 @@
 'use strict';
-module.exports = class Views {
+module.exports = class ViewsClass {
   constructor(res) {
     this.res = res;
   }

@@ -48,8 +48,7 @@ module.exports = class OrdersModel {
       let orderValues = '';
       await this.products.forEach(prod => orderValues = `${orderValues} (${this.order_id}, ${prod.id}, ${prod.count}),`);
       const queryOrderItems = `INSERT INTO order_item (order_id, product_id, quantity) VALUES ${orderValues.slice(0, orderValues.length-1)}`;
-      let q = await client.query(queryOrderItems); // add prod_id, quantity to order_item
-      console.log(q);
+      await client.query(queryOrderItems); // add prod_id, quantity to order_item
     } catch (e) {
       console.log(e);
     }
@@ -73,15 +72,21 @@ module.exports = class OrdersModel {
       SELECT products.product_name, order_item.quantity 
       FROM products, order_item 
       WHERE order_item.order_id = $1 AND order_item.product_id = products.id`;
+      const orderInfo = await client.query(queryOrderInfo, [this.order_id]);
+      this.order = orderInfo.rows;
+      return {user: user, products: this.order};
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  async getDetailOrderInfo () {
+    try {
       const queryOrderDetailInfo = `
       SELECT products.product_name, products.price, products.amount, order_item.quantity, products.price * order_item.quantity sum 
       FROM products, order_item 
       WHERE order_item.order_id = $1 AND order_item.product_id = products.id`;
-      const orderInfo = await client.query(queryOrderInfo, [this.order_id]);
-      this.order = orderInfo.rows;
       const orderDetailInfo = await client.query(queryOrderDetailInfo, [this.order_id]);
-      console.log('orderInfo', orderInfo.rows, 'orderDetailInfo', orderDetailInfo.rows);
-      return {user: user, products: this.order, details: orderDetailInfo.rows};
+      return {details: orderDetailInfo.rows};
     } catch (e) {
       console.log(e);
     }

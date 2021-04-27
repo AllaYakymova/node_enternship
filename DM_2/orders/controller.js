@@ -1,17 +1,15 @@
-'use strict';
 const OrdersModel = require('./orders_model');
-const Views = require('../view/index');
-const {corsDefender} = require('../helpers/cors_defender');
+const ViewsClass = require('../view/index');
 
 module.exports = class OrdersController {
   constructor(req, res) {
     this.req = req;
     this.res = res;
     this.orderModel = new OrdersModel(req);
-    this.view = new Views(res);
+    this.view = new ViewsClass(res);
   }
 
-  controllerOrderInfo() {
+  controllerOrder() {
     if(this.orderModel.reqNoBody() === false) {
       this.view.reqNoBodyView()
     }
