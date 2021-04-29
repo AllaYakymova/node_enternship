@@ -2,8 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const app = express();
-app.set('view engine', 'pug');
-const port = process.env.PORT || 8080;
+const port = 3000;
 
 const productRouter = require('./products/router');
 const orderRouter = require('./orders/router');
@@ -18,9 +17,9 @@ app.use(cors());
 app.use('/products', productRouter);
 app.use('/order', orderRouter);
 
-
 // start server
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
 
+module.exports = app;

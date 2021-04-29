@@ -1,42 +1,46 @@
 const OrdersModel = require('./orders_model');
-const ViewsClass = require('../view/view_class');
+const ViewsClass = require('../views/view_class');
 
 module.exports = class OrdersController {
   constructor(req, res) {
-    this.req = req;
-    this.res = res;
-    this.orderDetails = {};
     this.orderModel = new OrdersModel(req);
     this.view = new ViewsClass(res);
   }
 
   async controllerOrder() {
     try {
+      const result = await this.orderModel.completeOrder();
       if (this.orderModel.reqNoBody() === false) this.view.reqNoBodyView();
-      const result = await this.orderModel.getOrderInfo();
-      await this.view.okView(this.res, { user: result.user, products: result.products }, 'The order has made successfully');
-      // await this.displayOrderInfo();
+      if ('validErr' in result) await this.view.validErrorView(result.validErr);
+      if (result.products.length === 0) await this.view.validErrorView('Empty order');
+
+      this.customer = result.user;
+      const detailData = await this.orderModel.getDetailOrderInfo();
+      let data = await this.orderModel.getOrderTimeId();
+      this.time = data[0].time;
+      this.id = data[1].id;
+
+      if (!!detailData[0].price) {
+        this.products = detailData;
+        await this.view.okView({user: result.user, products: result.products}, 'The order has placed successfully');
+        await this.emailOrderInfo();
+      } else {
+        await this.view.errorProd(detailData, 'Not enough products');
+      }
     } catch (err) {
       this.view.errorView(err);
     }
   }
 
-  async displayOrderInfo() {
+  async emailOrderInfo() {
     try {
-      const customer = await this.orderModel.getOrderCustomerInfo();
-      const products = await this.orderModel.getDetailOrderInfo();
-      const {name, phone, email, id} = customer;
-      this.orderDetails = {
-        id: id,
-        name: name,
-        phone: phone,
-        email: email,
-        products: products
-      };
-      await this.view.displayOrder(this.orderDetails);
-      // await this.displayOrderInfo();
+      const {name, phone, email} = this.customer;
+      const data = { name, phone, email, time: this.time, id: this.id, products: this.products };
+      return this.view.sendOrder(data);
     } catch (err) {
       this.view.errorView(err);
     }
   }
 };
+
+

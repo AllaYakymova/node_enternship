@@ -3,9 +3,10 @@ const productsCountOptions = document.querySelector('#product_count_select');
 const addToCartButton = document.querySelector('#add_to_cart');
 const cartBoard = document.querySelector('#order_info');
 const senOrderButton = document.querySelector('#send_order');
+const getOrder = document.querySelector('#order_response');
 
 document.addEventListener('DOMContentLoaded', () => {
-  fetch(`http://localhost:8080/products`)
+  fetch(`http://localhost:3000/products`)
     .then(res => res.json())
     .then(res => {
       const data = res.data;
@@ -33,16 +34,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
       productsIdOptions.append(insertOptions(res.data));
       productsCountOptions.append(insertOptions());
+
     })
     .catch(err => console.log(err));
 });
 
 let order = [];
-addToCartButton.addEventListener('click', e => {
+addToCartButton.addEventListener('click', () => {
   const productId = productsIdOptions.value;
   const count = productsCountOptions.value;
   order.push({id: productId, count: count});
-  fetch(`http://localhost:8080/products/${productId}`)
+  fetch(`http://localhost:3000/products/${productId}`)
     .then(res => res.json())
     .then(res => {
       const data = res.data[0];
@@ -64,7 +66,7 @@ senOrderButton.addEventListener('click', () => {
 
   let body = { products: order, user:{name: name, phone: phone, email: email}};
   console.log(JSON.stringify(body));
-  fetch(`http://localhost:8080/order`,
+  fetch(`http://localhost:3000/order`,
     {
     method: 'POST',
     body: JSON.stringify(body),

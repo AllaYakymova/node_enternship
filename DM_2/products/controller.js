@@ -1,5 +1,5 @@
 const ProductsModel = require('./products_model');
-const ViewsClass = require('../view/view_class');
+const ViewsClass = require('../views/view_class');
 
 module.exports = class ProductsController {
   constructor(req, res) {
@@ -12,39 +12,37 @@ module.exports = class ProductsController {
   async getProducts() {
     try {
       const data = await this.productsModel.getAllProducts();
-      await this.view.okView(this.res, data, 'Here is all products')
+      await this.view.okView(data, 'All products');
     } catch (err) {
-      this.view.errorView(err)
+      this.view.errorView(err);
     }
   }
 
   async getProductById() {
     try {
-      const { productId } = this.req.params;
-      console.log(productId);
+      const {productId} = this.req.params;
       let data = await this.productsModel.getProductById();
-      console.log(data);
       if (data.length !== 0) {
-        await this.view.okView(this.res, data, `Product with id ${productId}`);
+        await this.view.okView(data, `Product with id ${productId}`);
       } else {
-        await this.view.okView(this.res, data, `No product with id ${productId}`);
+        await this.view.errorProd([{id: productId}], `No product with id ${productId}`);
       }
     } catch (err) {
-      this.view.errorView(err)
+      this.view.errorView(err);
     }
   }
 
   async searchProducts() {
     try {
-      if (!Object.values(this.req.query).filter(el => el).length) this.res.redirect("/products"); // redirection if no query
+      if (!Object.values(this.req.query).filter(el => el).length) this.res.redirect('/products'); // redirection if no query
       const data = await this.productsModel.searchProducts();
       if (data.length !== 0) {
-        await this.view.okView(this.res, data, `Products satisfying the query request. Amount: ${data.length}`);
+        await this.view.okView(data, `Products satisfying the query request. Amount: ${data.length}`);
       } else {
-        await this.view.okView(this.res, data, `There is no products satisfying the query request`);
+        await this.view.errorProd(data, `There is no products satisfying the query request`);
       }
     } catch (err) {
-      this.view.errorView(err)
+      this.view.errorView(err);
     }
   }
 };
