@@ -1,28 +1,27 @@
 const {client} = require('../config');
-const {validationSchema} = require('../validation/validation');
 
 module.exports = class OrdersModel {
   constructor(req) {
-    this.customer_name = req.body.user.name;
-    this.customer_phone = req.body.user.phone;
-    this.customer_email = req.body.user.email;
+    this.user_name = req.headers.username;
+    this.user_phone = req.headers.userphone;
+    this.user_email = req.headers.useremail;
+    this.user_password = req.headers.userpassword;
     this.products = req.body.products;
     this.req = req;
   }
 
   reqNoBody = () => !!this.req.body;
 
-  formValidation = () => validationSchema(this.customer_name, this.customer_phone, this.customer_email, this.products);
-
   async createOrder() {
     try {
-        const queryIsCustomer = `SELECT COUNT(id) FROM customers WHERE phone = $1`;
-        const queryNewCustomer = `INSERT INTO customers (name, phone, email) VALUES ($1, $2, $3)`;
-        const resultAuth = await client.query(queryIsCustomer, [this.customer_phone]);
-        const isExist = +resultAuth.rows[0].count;
-        if (!isExist) {
-          await client.query(queryNewCustomer, [this.customer_name, this.customer_phone, this.customer_email]);
-        }
+      console.log(this.req.headers, this.req.body);
+      const queryIsUser = `SELECT COUNT(id) FROM users WHERE phone = $1 AND password = $2`;
+      const queryNewUser = `INSERT INTO users (name, phone, email, password) VALUES ($1, $2, $3, $4)`;
+      const resultAuth = await client.query(queryIsUser, [this.user_phone, this.user_password]);
+      const isExist = +resultAuth.rows[0].count;
+      if (!isExist) {
+        await client.query(queryNewUser, [this.user_name, this.user_phone, this.user_email, this.user_password]);
+      }
     } catch (e) {
       console.log(e);
     }
@@ -30,9 +29,9 @@ module.exports = class OrdersModel {
 
   async getOrderId() {
     try {
-      const queryNewOrder = `INSERT INTO orders (customer_id) SELECT customers.id from customers WHERE customers.phone = $1`;
+      const queryNewOrder = `INSERT INTO orders (user_id) SELECT users.id from users WHERE users.phone = $1`;
       const queryOrderId = `SELECT MAX(id) FROM orders`;
-      await client.query(queryNewOrder, [this.customer_phone]);
+      await client.query(queryNewOrder, [this.user_phone]);
       const getOrderId = await client.query(queryOrderId);
       this.order_id = getOrderId.rows[0].max;
     } catch (e) {
@@ -44,6 +43,7 @@ module.exports = class OrdersModel {
     try {
       let orderValues = '';
       await this.products.forEach(prod => orderValues = `${orderValues} (${this.order_id}, ${prod.id}, ${prod.count}),`);
+      console.log('orderValues', orderValues);
       const queryOrderItems = `INSERT INTO order_item (order_id, product_id, quantity) VALUES ${orderValues.slice(0, orderValues.length - 1)}`;
       await client.query(queryOrderItems); // add prod_id, quantity to order_item
     } catch (e) {
@@ -53,7 +53,7 @@ module.exports = class OrdersModel {
 
   async getOrderCustomerInfo() {
     try {
-      const queryOrderCustomerInfo = `SELECT customers.name, customers.phone, customers.email FROM customers, orders  WHERE orders.customer_id = customers.id AND orders.id = $1`;
+      const queryOrderCustomerInfo = `SELECT users.name, users.phone, users.email FROM users, orders  WHERE orders.user_id = users.id AND orders.id = $1`;
       const orderCustomerInfo = await client.query(queryOrderCustomerInfo, [this.order_id]);
       return orderCustomerInfo.rows[0];
     } catch (e) {
@@ -61,7 +61,7 @@ module.exports = class OrdersModel {
     }
   }
 
-  async getOrderInfo(user) {
+  async getOrderInfo() {
     try {
       const queryOrderInfo = `
       SELECT products.id, order_item.quantity 
@@ -69,7 +69,7 @@ module.exports = class OrdersModel {
       WHERE order_item.order_id = $1 AND order_item.product_id = products.id`;
       const orderInfo = await client.query(queryOrderInfo, [this.order_id]);
       this.order = orderInfo.rows;
-      return {user: user, products: this.order};
+      return {products: this.order};
     } catch (e) {
       console.log(e);
     }
@@ -77,14 +77,11 @@ module.exports = class OrdersModel {
 
   async getDetailOrderInfo() {
     try {
-      const queryOrderDetailInfo = `
-      SELECT products.id, products.product_name, products.price, products.amount, units.unit, order_item.quantity, products.price * order_item.quantity sum 
-      FROM products, order_item, units 
-      WHERE order_item.order_id = $1 AND order_item.product_id = products.id AND units.id = products.id_units`;
+      const queryOrderDetailInfo = `SELECT products.id, products.product_name, products.price, products.amount, units.unit, order_item.quantity, products.price * order_item.quantity sum FROM products, order_item, units WHERE order_item.order_id = $1 AND order_item.product_id = products.id AND units.id = products.id_units`;
       const orderDetailInfo = await client.query(queryOrderDetailInfo, [this.order_id]);
       const prodData = orderDetailInfo.rows;
       let noProdErr = [];
-      for(let prod of prodData) {
+      for (let prod of prodData) {
         if (prod.amount < prod.quantity) {
           const data = {id: prod.id, amount: prod.amount};
           await noProdErr.push(data);
@@ -100,7 +97,7 @@ module.exports = class OrdersModel {
     try {
       const queryTime = `SELECT orders.time FROM orders WHERE orders.id = $1`;
       const time = await client.query(queryTime, [this.order_id]);
-      return [time.rows[0], {id: this.order_id} ];
+      return [time.rows[0], {id: this.order_id}];
     } catch (e) {
       console.log(e);
     }
@@ -108,20 +105,11 @@ module.exports = class OrdersModel {
 
   async completeOrder() {
     try {
-      let isValid = await this.formValidation();
-      if (Object.values(isValid).some(el => el !== true)) {
-        if (isValid.name === false) return {validErr: 'user info (name) is not valid.'};
-        if (isValid.phone === false) return {validErr: 'user info (phone) is not valid.'};
-        if (isValid.email === false) return {validErr: 'user info (email) is not valid.'};
-        if (isValid.id === false) return {validErr: 'The product id is not valid'};
-        if (isValid.dataFields === false) return {validErr: 'The products fields are not valid'};
-      } else {
-        await this.createOrder();
-        await this.getOrderId();
-        await this.setOrderItems();
-        const user = await this.getOrderCustomerInfo();
-        return await this.getOrderInfo(user);
-      }
+      await this.createOrder();
+      await this.getOrderId();
+      await this.setOrderItems();
+      const user = await this.getOrderCustomerInfo();
+      return await this.getOrderInfo(user);
     } catch (e) {
       console.log(e);
     }

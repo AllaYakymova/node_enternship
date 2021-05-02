@@ -22,7 +22,7 @@ module.exports = class OrdersController {
 
       if (!!detailData[0].price) {
         this.products = detailData;
-        await this.view.okView({user: result.user, products: result.products}, 'The order has placed successfully');
+        await this.view.okView({products: result.products}, 'The order has placed successfully');
         await this.emailOrderInfo();
       } else {
         await this.view.errorProd(detailData, 'Not enough products');
