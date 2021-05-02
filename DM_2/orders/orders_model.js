@@ -1,39 +1,23 @@
-const {client} = require('../config');
+const {client} = require('../config/bdConfig');
 
 module.exports = class OrdersModel {
-  constructor(req) {
-    this.user_name = req.headers.username;
-    this.user_phone = req.headers.userphone;
-    this.user_email = req.headers.useremail;
-    this.user_password = req.headers.userpassword;
+  constructor(req, res) {
     this.products = req.body.products;
     this.req = req;
+    this.res = res;
   }
 
   reqNoBody = () => !!this.req.body;
-
-  async createOrder() {
-    try {
-      console.log(this.req.headers, this.req.body);
-      const queryIsUser = `SELECT COUNT(id) FROM users WHERE phone = $1 AND password = $2`;
-      const queryNewUser = `INSERT INTO users (name, phone, email, password) VALUES ($1, $2, $3, $4)`;
-      const resultAuth = await client.query(queryIsUser, [this.user_phone, this.user_password]);
-      const isExist = +resultAuth.rows[0].count;
-      if (!isExist) {
-        await client.query(queryNewUser, [this.user_name, this.user_phone, this.user_email, this.user_password]);
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  };
 
   async getOrderId() {
     try {
       const queryNewOrder = `INSERT INTO orders (user_id) SELECT users.id from users WHERE users.phone = $1`;
       const queryOrderId = `SELECT MAX(id) FROM orders`;
-      await client.query(queryNewOrder, [this.user_phone]);
+      console.log(this.res.locals.user);
+      await client.query(queryNewOrder, [this.res.locals.user]); // get user data from res.locals
       const getOrderId = await client.query(queryOrderId);
       this.order_id = getOrderId.rows[0].max;
+      console.log(this.order_id);
     } catch (e) {
       console.log(e);
     }
@@ -51,7 +35,7 @@ module.exports = class OrdersModel {
     }
   }
 
-  async getOrderCustomerInfo() {
+  async getOrderUserInfo() {
     try {
       const queryOrderCustomerInfo = `SELECT users.name, users.phone, users.email FROM users, orders  WHERE orders.user_id = users.id AND orders.id = $1`;
       const orderCustomerInfo = await client.query(queryOrderCustomerInfo, [this.order_id]);
@@ -81,7 +65,7 @@ module.exports = class OrdersModel {
       const orderDetailInfo = await client.query(queryOrderDetailInfo, [this.order_id]);
       const prodData = orderDetailInfo.rows;
       let noProdErr = [];
-      for (let prod of prodData) {
+      for (let prod of prodData) {  // check of products amount enough
         if (prod.amount < prod.quantity) {
           const data = {id: prod.id, amount: prod.amount};
           await noProdErr.push(data);
@@ -105,10 +89,9 @@ module.exports = class OrdersModel {
 
   async completeOrder() {
     try {
-      await this.createOrder();
       await this.getOrderId();
       await this.setOrderItems();
-      const user = await this.getOrderCustomerInfo();
+      const user = await this.getOrderUserInfo();
       return await this.getOrderInfo(user);
     } catch (e) {
       console.log(e);

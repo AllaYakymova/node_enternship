@@ -1,6 +1,6 @@
 const Joi = require('joi');
 
-module.exports = Joi.object().keys({
+module.exports = Joi.object({
   username: Joi
     .string()
     .ruleset.min(4).max(50).rule({ message: 'Name must be between 4 and 50' })
@@ -16,5 +16,5 @@ module.exports = Joi.object().keys({
     .string()
     .ruleset.min(4).max(10).rule({ message: 'Password must be between 4 and 10' })
     .required()
-})
-  .with('phone', 'password');
+}).required()
+  .with('userphone', 'userpassword');

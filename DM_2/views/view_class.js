@@ -12,7 +12,7 @@ module.exports = class ViewsClass {
 
   validErrorView = (message) => this.res.status(400).json({status: 'error', data: [], message: message});
 
-  errorProd = (data, message) => this.res.status(400).json({status: 'error', data: data, message: message});
+  errorData = (data, message) => this.res.status(400).json({status: 'error', data: data, message: message});
 
   okView = (data, message) => this.res.status(200).json({status: 'ok', data: data, message: message});
 

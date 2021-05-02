@@ -1,6 +1,5 @@
 const express = require('express');
 const morgan = require('morgan');
-const Joi = require('joi');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const errorHandler = require('./middlewares/error_middleware');
@@ -10,6 +9,7 @@ const port = process.env.PORT || 3000;
 
 const productRouter = require('./products/router');
 const orderRouter = require('./orders/router');
+const userRouter = require('./user/router');
 
 // body parser middleware
 app.use(bodyParser.json());
@@ -19,6 +19,7 @@ app.use(cors());
 app.use(morgan('dev'));
 
 // use routes
+app.use('/user', userRouter);
 app.use('/products', productRouter);
 app.use('/order', orderRouter);
 

@@ -1,18 +1,22 @@
-const express = require("express");
-const router = express.Router();
-const validator = require('express-joi-validation').createValidator();
+const express = require('express');
+const orderRouter = express.Router();
+const validator = require('../config/validationConfig');
+const authMiddleware = require('../middlewares/auth_middleware');
 const userSchema = require('../dtos/user.dtos');
 const orderProdSchema = require('../dtos/orderProducts.dtos');
-const OrdersController = require("./controller");
+const OrdersController = require('./controller');
 
 
 // router  POST /order
-router.post("/",
+orderRouter.post('/',
   validator.headers(userSchema),
+  authMiddleware,
   validator.body(orderProdSchema),
   (req, res) => {
-  const newOrdersController = new OrdersController(req, res);
-  return newOrdersController.controllerOrder();
-});
+    const newOrdersController = new OrdersController(req, res);
+    return newOrdersController.controllerOrder();
+  }
+  );
 
-module.exports = router;
+
+module.exports = orderRouter;
