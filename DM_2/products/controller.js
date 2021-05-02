@@ -12,7 +12,7 @@ module.exports = class ProductsController {
   async getProducts() {
     try {
       const data = await this.productsModel.getAllProducts();
-      await this.view.okView(data, 'All products');
+      this.view.okView(data, 'All products');
     } catch (err) {
       this.view.errorView(err);
     }
@@ -23,9 +23,9 @@ module.exports = class ProductsController {
       const {productId} = this.req.params;
       let data = await this.productsModel.getProductById();
       if (data.length !== 0) {
-        await this.view.okView(data, `Product with id ${productId}`);
+        this.view.okView(data, `Product with id ${productId}`);
       } else {
-        await this.view.errorProd([{id: productId}], `No product with id ${productId}`);
+        this.view.errorProd([{id: productId}], `No product with id ${productId}`);
       }
     } catch (err) {
       this.view.errorView(err);
