@@ -11,7 +11,7 @@ const port = process.env.PORT || 3000;
 
 const productRouter = require('./products/router');
 const orderRouter = require('./orders/router');
-const userRouter = require('./user/router');
+const userRouter = require('./users/router');
 
 // body parser middleware
 app.use(bodyParser.json());
@@ -21,7 +21,7 @@ app.use(cors());
 app.use(morgan('dev'));
 
 // use routes
-app.use('/user', userRouter);
+app.use('/users', userRouter);
 app.use('/products', productRouter);
 app.use('/order', orderRouter);
 
