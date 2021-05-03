@@ -3,6 +3,8 @@ const morgan = require('morgan');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const errorHandler = require('./middlewares/error_middleware');
+require('dotenv').config();
+// require('dotenv').load();
 const app = express();
 const port = process.env.PORT || 3000;
 // const port = 3000;
