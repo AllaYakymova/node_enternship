@@ -18,4 +18,6 @@ const Units = sequelize.define('units', {
   updatedAt: false
 });
 
+
 module.exports = Units;
+

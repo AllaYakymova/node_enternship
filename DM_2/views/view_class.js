@@ -1,28 +1,40 @@
-"use strict";
-const {mailSender} = require('./mailer');
+'use strict';
+const { mailSender } = require('./mailer');
 
 module.exports = class ViewsClass {
-  constructor(res) {
-    this.res = res;
-  }
 
-  reqNoBodyView = () => this.res.status(400).json({status: 'error', message: 'No body'});
+  errorView = (err, res) => res.status(400).json({status: 'error', message: err.stack});
 
-  errorView = (err) => this.res.status(400).json({status: 'error', message: err.stack});
+  errorData = (res, code, data, message) => res.status(code).json({status: 'error', data, message: message});
 
-  validErrorView = (message) => this.res.status(400).json({status: 'error', data: [], message: message});
+  okView = (res, data, message) => res.status(200).json({status: 'ok', data: data, message: message});
 
-  errorData = (data, message) => this.res.status(400).json({status: 'error', data: data, message: message});
-
-  okView = (data, message) => this.res.status(200).json({status: 'ok', data: data, message: message});
+  async setResLocalsData(req, res, isAuth) {
+    if(isAuth === true) {
+      res.locals.user = {
+        user: req.headers.userphone,
+        isAuthenticated: true,
+      };
+      console.log('res.locals.user', res.locals.user);
+    } else {
+      res.locals.user = {
+        isAuthenticated: false,
+      };
+    }
+    return;
+  };
 
   async sendOrder(data) {
     const products = data.products;
-    const prodInfo = products.map(product =>`<tr><td>${product.product_name}</td><td>${product.quantity}</td><td>${product.price}</td><td>${product.unit}</td><td>${product.sum}</td></tr>`).join('');
+    const prodInfo = products.map(product => `<tr><td>${product.product_name}</td><td>${product.quantity}</td><td>${product.price}</td><td>${product.unit}</td><td>${product.price * product.quantity}</td></tr>`)
+      .join('');
 
-    const letterBody = `<div><h2><ins>New order #${data.id}</ins></h2><hr><p>Time: ${data.time}</p><h3>Customer details</h3><p><strong>name:</strong> ${data.name}</p><p><strong>phone:</strong> ${data.phone}</p><p><strong>email:</strong> ${data.email}</p><h3>Order details</h3><table border="1" width="60%" cellpadding="5"><tr><th>Product name</th><th>Quantity</th><th>Price</th><th>Unites</th><th>Sum</th></tr>${prodInfo}</table><h3><ins>Total: ${products.map(el => +el.sum).reduce((a, b) => a + b)}</ins></h3></div>`;
+    const letterBody = `<div><h2><ins>New order #${data.id}</ins></h2><hr><p>Time: ${data.time}</p><h3>Customer details</h3><p><strong>name:</strong> ${data.name}</p><p><strong>phone:</strong> ${data.phone}</p><p><strong>email:</strong> ${data.email}</p><h3>Order details</h3><table border="1" width="60%" cellpadding="5"><tr><th>Product name</th><th>Quantity</th><th>Price</th><th>Unites</th><th>Sum</th></tr>${prodInfo}</table><h3><ins>Total: ${products.map(el => +el.price * +el.quantity)
+      .reduce((a, b) => a + b)}</ins></h3></div>`;
 
-    mailSender(letterBody, data.id).then().catch(err => console.log(err));
+    mailSender(letterBody, data.id)
+      .then()
+      .catch(err => console.log(err));
   };
 };
 

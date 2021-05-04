@@ -30,5 +30,4 @@ const Users = sequelize.define('users', {
   updatedAt: false
 });
 
-
 module.exports = Users;

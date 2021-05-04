@@ -2,7 +2,7 @@ const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const errorHandler = require('./middlewares/error_middleware');
+const errorHandler = require('./exceptions/error_middleware');
 require('dotenv').config();
 // require('dotenv').load();
 const app = express();
@@ -18,14 +18,13 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cors());
 
-app.use(morgan('dev'));
-
 // use routes
 app.use('/users', userRouter);
 app.use('/products', productRouter);
-app.use('/order', orderRouter);
+app.use('/orders', orderRouter);
 
-app.use(errorHandler); //////////////
+app.use(morgan('dev'));
+app.use(errorHandler);
 
 // start server
 app.listen(port, () => {

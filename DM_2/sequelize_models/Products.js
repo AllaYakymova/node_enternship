@@ -9,7 +9,7 @@ const Products = sequelize.define('products', {
         type: DataTypes.BIGINT,
         primaryKey: true,
         allowNull: false,
-        // unique: true
+        unique: true
     },
     product_name: {
         type: DataTypes.STRING(1000),

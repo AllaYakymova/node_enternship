@@ -17,16 +17,14 @@ const Orders = sequelize.define('orders', {
       model: Users,
       key: Users.id
     }
+  },
+  createdAt: {
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW
   }
 }, {
   createdAt: true,
   updatedAt: false
 });
-
-// const modelsSync = async function() {
-//   await Orders.sync({force: true});
-//   console.log("The table for all models were just (re)created!");
-// };
-// modelsSync().then().catch((err) => console.error(err));
 
 module.exports = Orders;
