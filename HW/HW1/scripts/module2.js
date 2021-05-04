@@ -1,7 +1,7 @@
 "use strict";
 
 export default function arrangeWordsByNumbers(string) {
-  let getNumber = word => +word.match(/\d+/)[0];
+  let getNumber = word => word.match(/\d+/);
 
   if(string.length !== 0) {
     return string.split(" ")
