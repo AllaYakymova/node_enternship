@@ -1,11 +1,11 @@
 const DefaultError = require('../exceptions/default_error');
-const Orders = require('../sequelize_models/Order');
-const Users = require('../sequelize_models/User');
-const OrderItems = require('../sequelize_models/OrderItem');
-const Products = require('../sequelize_models/Product');
-const Units = require('../sequelize_models/Unit');
-const Manufactures = require('../sequelize_models/Manufacture');
-const Categories = require('../sequelize_models/Category');
+const Orders = require('../db/models/Order');
+const Users = require('../db/models/User');
+const OrderItems = require('../db/models/OrderItem');
+const Products = require('../db/models/Product');
+const Units = require('../db/models/Unit');
+const Manufactures = require('../db/models/Manufacture');
+const Categories = require('../db/models/Category');
 
 module.exports = class OrdersModel {
   constructor(req, res) {

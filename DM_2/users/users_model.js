@@ -1,5 +1,5 @@
 const DefaultError = require('../exceptions/default_error');
-const Users = require('../sequelize_models/User');
+const Users = require('../db/models/User');
 
 module.exports = class UsersModel {
   constructor(req, res, next) {
