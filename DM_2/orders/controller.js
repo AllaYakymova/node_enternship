@@ -1,44 +1,39 @@
+'use strict';
 const OrdersModel = require('./orders_model');
 const ViewsClass = require('../views/view_class');
 
 module.exports = class OrdersController {
-  constructor(req, res) {
-    this.orderModel = new OrdersModel(req);
+  constructor(req, res, next) {
+    this.req = req;
+    this.res = res;
+    this.next = next;
+    this.orderModel = new OrdersModel(req, res);
     this.view = new ViewsClass(res);
   }
 
   async controllerOrder() {
     try {
       const result = await this.orderModel.completeOrder();
-      if (this.orderModel.reqNoBody() === false) this.view.reqNoBodyView();
-      if ('validErr' in result) await this.view.validErrorView(result.validErr);
-      if (result.products.length === 0) await this.view.validErrorView('Empty order');
-
-      this.customer = result.user;
       const detailData = await this.orderModel.getDetailOrderInfo();
-      let data = await this.orderModel.getOrderTimeId();
-      this.time = data[0].time;
-      this.id = data[1].id;
-
       if (!!detailData[0].price) {
         this.products = detailData;
-        await this.view.okView({user: result.user, products: result.products}, 'The order has placed successfully');
+        await this.view.okView(this.res, {products: result.products}, 'The order has placed successfully');
         await this.emailOrderInfo();
       } else {
-        await this.view.errorProd(detailData, 'Not enough products');
+        throw this.view.errorData(this.res, 200, detailData, 'Not enough products');
       }
     } catch (err) {
-      this.view.errorView(err);
+      this.next(err);
     }
   }
 
   async emailOrderInfo() {
     try {
-      const {name, phone, email} = this.customer;
-      const data = { name, phone, email, time: this.time, id: this.id, products: this.products };
+      const {name, phone, email} = this.orderModel.user;
+      const data = { phone: phone, name: name ? name : 'no data', email: email ? email : 'no data', time: this.orderModel.order_createdAt, id: this.orderModel.order_id, products: this.products };
       return this.view.sendOrder(data);
     } catch (err) {
-      this.view.errorView(err);
+      this.view.errorView(err, this.res);
     }
   }
 };

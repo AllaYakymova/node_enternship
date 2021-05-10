@@ -2,7 +2,6 @@ const express = require("express");
 const productRouter = express.Router();
 const ProductsController = require("./controller");
 
-
 // route   GET /products
 // GET all existing products
 productRouter.get("/", (req, res) => {

@@ -1,129 +1,111 @@
-const {client} = require('../config');
-const {validationSchema} = require('../validation/validation');
+const DefaultError = require('../exceptions/default_error');
+const Orders = require('../sequelize_models/Order');
+const Users = require('../sequelize_models/User');
+const OrderItems = require('../sequelize_models/OrderItem');
+const Products = require('../sequelize_models/Product');
+const Units = require('../sequelize_models/Unit');
+const Manufactures = require('../sequelize_models/Manufacture');
+const Categories = require('../sequelize_models/Category');
 
 module.exports = class OrdersModel {
-  constructor(req) {
-    this.customer_name = req.body.user.name;
-    this.customer_phone = req.body.user.phone;
-    this.customer_email = req.body.user.email;
+  constructor(req, res) {
     this.products = req.body.products;
     this.req = req;
+    this.res = res;
   }
 
-  reqNoBody = () => !!this.req.body;
-
-  formValidation = () => validationSchema(this.customer_name, this.customer_phone, this.customer_email, this.products);
-
-  async createOrder() {
+  async getUserData() {
     try {
-        const queryIsCustomer = `SELECT COUNT(id) FROM customers WHERE phone = $1`;
-        const queryNewCustomer = `INSERT INTO customers (name, phone, email) VALUES ($1, $2, $3)`;
-        const resultAuth = await client.query(queryIsCustomer, [this.customer_phone]);
-        const isExist = +resultAuth.rows[0].count;
-        if (!isExist) {
-          await client.query(queryNewCustomer, [this.customer_name, this.customer_phone, this.customer_email]);
-        }
-    } catch (e) {
-      console.log(e);
+      const getUserId = await Users.findAll({
+        attributes: ['id', 'name', 'phone', 'email'],
+        where: {phone: this.req.headers.userphone},
+      });
+      this.user = getUserId[0].dataValues;
+      console.log('this.user', this.user);
+    } catch (err) {
+      throw new DefaultError(400, err.stack);
     }
-  };
+  }
 
   async getOrderId() {
     try {
-      const queryNewOrder = `INSERT INTO orders (customer_id) SELECT customers.id from customers WHERE customers.phone = $1`;
-      const queryOrderId = `SELECT MAX(id) FROM orders`;
-      await client.query(queryNewOrder, [this.customer_phone]);
-      const getOrderId = await client.query(queryOrderId);
-      this.order_id = getOrderId.rows[0].max;
-    } catch (e) {
-      console.log(e);
+      const newOrder = await Orders.create({user_id: this.user.id});
+      this.order_id = newOrder.dataValues.id;
+      this.order_createdAt = newOrder.dataValues.createdAt;
+    } catch (err) {
+      throw new DefaultError(400, err.stack);
     }
   }
 
   async setOrderItems() {
     try {
-      let orderValues = '';
-      await this.products.forEach(prod => orderValues = `${orderValues} (${this.order_id}, ${prod.id}, ${prod.count}),`);
-      const queryOrderItems = `INSERT INTO order_item (order_id, product_id, quantity) VALUES ${orderValues.slice(0, orderValues.length - 1)}`;
-      await client.query(queryOrderItems); // add prod_id, quantity to order_item
-    } catch (e) {
-      console.log(e);
+      for (let prod of this.products) {
+        await OrderItems.create({
+          order_id: this.order_id,
+          product_id: prod.id,
+          quantity: prod.count,
+        });
+      }
+    } catch (err) {
+      throw new DefaultError(400, err.stack);
     }
   }
 
-  async getOrderCustomerInfo() {
+  async getOrderInfo() {
     try {
-      const queryOrderCustomerInfo = `SELECT customers.name, customers.phone, customers.email FROM customers, orders  WHERE orders.customer_id = customers.id AND orders.id = $1`;
-      const orderCustomerInfo = await client.query(queryOrderCustomerInfo, [this.order_id]);
-      return orderCustomerInfo.rows[0];
-    } catch (e) {
-      console.log(e);
-    }
-  }
-
-  async getOrderInfo(user) {
-    try {
-      const queryOrderInfo = `
-      SELECT products.id, order_item.quantity 
-      FROM products, order_item 
-      WHERE order_item.order_id = $1 AND order_item.product_id = products.id`;
-      const orderInfo = await client.query(queryOrderInfo, [this.order_id]);
-      this.order = orderInfo.rows;
-      return {user: user, products: this.order};
-    } catch (e) {
-      console.log(e);
+      const order = await OrderItems.findAll({
+        attributes: [['product_id', 'id'], 'quantity'],
+        where: {order_id: this.order_id},
+      });
+      this.order = order.map(el => el.dataValues);
+      return {products: this.order};
+    } catch (err) {
+      throw new DefaultError(400, err.stack);
     }
   }
 
   async getDetailOrderInfo() {
     try {
-      const queryOrderDetailInfo = `
-      SELECT products.id, products.product_name, products.price, products.amount, units.unit, order_item.quantity, products.price * order_item.quantity sum 
-      FROM products, order_item, units 
-      WHERE order_item.order_id = $1 AND order_item.product_id = products.id AND units.id = products.id_units`;
-      const orderDetailInfo = await client.query(queryOrderDetailInfo, [this.order_id]);
-      const prodData = orderDetailInfo.rows;
+      let prodsArr = [];
       let noProdErr = [];
-      for(let prod of prodData) {
-        if (prod.amount < prod.quantity) {
-          const data = {id: prod.id, amount: prod.amount};
-          await noProdErr.push(data);
+      for (let item of this.order) {
+        const prodValues = await Products.findAll({where: {id: item.id}});
+        const product = prodValues[0].dataValues;
+        const unit = await Units.findOne({where: {id: product.id_units}});
+        const manufacture = await Manufactures.findOne({where: {id: product.id_manufacture}});
+        const category = await Categories.findOne({where: {id: product.id_category}});
+        const quantity = await OrderItems.findOne({
+          where: {product_id: product.id, quantity: item.quantity},
+        });
+
+        product.unit = unit.dataValues.unit;
+        product.category = category.dataValues.category;
+        product.manufacture = manufacture.dataValues.manufacture;
+        product.quantity = quantity.dataValues.quantity;
+
+        if (product.amount < product.quantity) {     // check if products amount sufficient
+          const data = {id: product.id, amount: product.amount};
+          noProdErr.push(data);
+        } else {
+          prodsArr.push(product);
         }
       }
-      return noProdErr.length > 0 ? noProdErr : prodData;
-    } catch (e) {
-      console.log(e);
-    }
-  }
-
-  async getOrderTimeId() {
-    try {
-      const queryTime = `SELECT orders.time FROM orders WHERE orders.id = $1`;
-      const time = await client.query(queryTime, [this.order_id]);
-      return [time.rows[0], {id: this.order_id} ];
-    } catch (e) {
-      console.log(e);
+      console.log('noProdErr', noProdErr);
+      return noProdErr.length > 0 ? noProdErr : prodsArr;
+    } catch (err) {
+      throw new DefaultError(400, err.stack);
     }
   }
 
   async completeOrder() {
     try {
-      let isValid = await this.formValidation();
-      if (Object.values(isValid).some(el => el !== true)) {
-        if (isValid.name === false) return {validErr: 'user info (name) is not valid.'};
-        if (isValid.phone === false) return {validErr: 'user info (phone) is not valid.'};
-        if (isValid.email === false) return {validErr: 'user info (email) is not valid.'};
-        if (isValid.id === false) return {validErr: 'The product id is not valid'};
-        if (isValid.dataFields === false) return {validErr: 'The products fields are not valid'};
-      } else {
-        await this.createOrder();
-        await this.getOrderId();
-        await this.setOrderItems();
-        const user = await this.getOrderCustomerInfo();
-        return await this.getOrderInfo(user);
-      }
-    } catch (e) {
-      console.log(e);
+      await this.getUserData();
+      await this.getOrderId();
+      await this.setOrderItems();
+      return await this.getOrderInfo();
+    } catch (err) {
+      console.log(err);
+      // throw new DefaultError(400, err.stack);
     }
   }
 };

@@ -1,4 +1,4 @@
-const {client} = require('../config');
+const {client} = require('../config/db_config');
 
 module.exports = class ProductsModel {
   constructor(req) {
