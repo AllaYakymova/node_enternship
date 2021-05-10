@@ -1,8 +1,8 @@
 const { DataTypes} = require('sequelize');
-const sequelize = require('../config/sequelizeConfig');
-const Users = require('./Users');
+const db = require('../config/sequelize_config');
+const Users = require('./User');
 
-const Orders = sequelize.define('orders', {
+const Order = db.define('orders', {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
@@ -27,4 +27,4 @@ const Orders = sequelize.define('orders', {
   updatedAt: false
 });
 
-module.exports = Orders;
+module.exports = Order;

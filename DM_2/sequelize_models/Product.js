@@ -1,10 +1,10 @@
 const { DataTypes} = require('sequelize');
-const sequelize = require('../config/sequelizeConfig');
-const Manufactures = require('./Manufactures');
-const Categories = require('./Categories');
-const Units = require('./Units');
+const db = require('../config/sequelize_config');
+const Manufactures = require('./Manufacture');
+const Categories = require('./Category');
+const Units = require('./Unit');
 
-const Products = sequelize.define('products', {
+const Product = db.define('products', {
     id: {
         type: DataTypes.BIGINT,
         primaryKey: true,
@@ -62,7 +62,7 @@ const Products = sequelize.define('products', {
     updatedAt: false
 });
 
-module.exports = Products;
+module.exports = Product;
 
 
 

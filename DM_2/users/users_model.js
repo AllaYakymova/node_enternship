@@ -1,13 +1,14 @@
-const DefaultError = require('../exceptions/defaultError');
-const Users = require('../sequelize_models/Users');
+const DefaultError = require('../exceptions/default_error');
+const Users = require('../sequelize_models/User');
 
 module.exports = class UsersModel {
-  constructor(req, res) {
+  constructor(req, res, next) {
     this.req = req;
     this.res = res;
+    this.next = next;
   }
 
-  async checkIsUser() {
+  async checkIfUserExists() {
     try {
       const resultAuth = await Users.findAll({
         attributes: ['id'],
@@ -24,7 +25,10 @@ module.exports = class UsersModel {
 
   async regUser() {
     try {
-      await this.checkIsUser();
+      const isUserExists = await this.checkIfUserExists();
+      if(isUserExists) {
+        throw new DefaultError(200, "User is already registered");
+      }
       await Users.create({
         name: this.req.headers.name,
         phone: this.req.headers.phone,
@@ -32,7 +36,7 @@ module.exports = class UsersModel {
         password: this.req.headers.password,
       });
     } catch (err) {
-      throw new DefaultError(err);
+      this.next(err);
     }
   }
 

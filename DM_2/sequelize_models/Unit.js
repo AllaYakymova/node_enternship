@@ -1,7 +1,7 @@
 const { DataTypes} = require('sequelize');
-const sequelize = require('../config/sequelizeConfig');
+const db = require('../config/sequelize_config');
 
-const Units = sequelize.define('units', {
+const Unit = db.define('units', {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
@@ -19,5 +19,5 @@ const Units = sequelize.define('units', {
 });
 
 
-module.exports = Units;
+module.exports = Unit;
 

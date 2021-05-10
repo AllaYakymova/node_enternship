@@ -1,7 +1,7 @@
-const { DataTypes} = require('sequelize');
-const sequelize = require('../config/sequelizeConfig');
+const { DataTypes } = require('sequelize');
+const db = require('../config/sequelize_config');
 
-const Categories = sequelize.define('categories', {
+const Manufacture = db.define('manufactures', {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
@@ -9,14 +9,14 @@ const Categories = sequelize.define('categories', {
     allowNull: false,
     unique: true
   },
-  category: {
+  manufacture: {
     type: DataTypes.TEXT,
     allowNull: false,
     unique: true
   }
-}, {
+},{
   createdAt: false,
-  updatedAt: false
+    updatedAt: false
 });
 
-module.exports = Categories;
+module.exports = Manufacture;

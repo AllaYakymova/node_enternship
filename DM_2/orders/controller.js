@@ -3,9 +3,10 @@ const OrdersModel = require('./orders_model');
 const ViewsClass = require('../views/view_class');
 
 module.exports = class OrdersController {
-  constructor(req, res) {
+  constructor(req, res, next) {
     this.req = req;
     this.res = res;
+    this.next = next;
     this.orderModel = new OrdersModel(req, res);
     this.view = new ViewsClass(res);
   }
@@ -19,10 +20,10 @@ module.exports = class OrdersController {
         await this.view.okView(this.res, {products: result.products}, 'The order has placed successfully');
         await this.emailOrderInfo();
       } else {
-        await this.view.errorData(this.res, 200, detailData, 'Not enough products');
+        throw this.view.errorData(this.res, 200, detailData, 'Not enough products');
       }
     } catch (err) {
-      this.view.errorView(err, this.res);
+      this.next(err);
     }
   }
 

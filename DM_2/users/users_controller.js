@@ -1,19 +1,20 @@
 'use strict';
-const DefaultError = require('../exceptions/defaultError');
+const DefaultError = require('../exceptions/default_error');
 const UsersModel = require('./users_model');
 const ViewsClass = require('../views/view_class');
 
 module.exports = class UsersController {
-  constructor(req, res) {
+  constructor(req, res, next) {
     this.res = res;
     this.req = req;
+    this.next = next;
     this.userModel = new UsersModel(req);
     this.view = new ViewsClass(res);
   }
 
   async authUserController() {
     try {
-      const authInfo = await this.userModel.checkIsUser();
+      const authInfo = await this.userModel.checkIfUserExists();
       if (authInfo) {
         await this.view.setResLocalsData(this.req, this.res, true);
       } else {
@@ -28,20 +29,14 @@ module.exports = class UsersController {
 
   async regUserController() {
     try {
-      const authInfo = await this.userModel.checkIsUser();
-      switch (authInfo) {
-        case 'true': {
-          return this.view.errorData(this.res, 400, {phone: this.req.headers.userphone}, 'User with phone number has already registered');
-        }
-        case 'false': {
-          await this.userModel.regUser();
-          return this.view.okView(this.res, {user: {phone: this.req.headers.userphone}}, 'User has registered successfully');
-        }
+      const authInfo = await this.userModel.checkIfUserExists();
+      if (!authInfo) {
+        await this.userModel.regUser();
+        return this.view.okView(this.res, {user: {phone: this.req.headers.userphone}}, 'User has registered successfully');
       }
+      throw this.view.errorData(this.res, 200, {phone: this.req.headers.userphone}, 'User with phone number has already registered');
     } catch (err) {
-      throw new DefaultError(400, err.stack);
+      this.next(err);
     }
   }
-
-
 };

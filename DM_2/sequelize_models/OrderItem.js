@@ -1,9 +1,9 @@
 const { DataTypes, Deferrable} = require('sequelize');
-const sequelize = require('../config/sequelizeConfig');
-const Orders = require('./Orders');
-const Products = require('./Products');
+const sequelize = require('../config/sequelize_config');
+const Orders = require('./Order');
+const Products = require('./Product');
 
-const OrderItems = sequelize.define('order_items', {
+const OrderItem = sequelize.define('order_items', {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
@@ -40,4 +40,4 @@ const OrderItems = sequelize.define('order_items', {
   updatedAt: false
 });
 
-module.exports = OrderItems;
+module.exports = OrderItem;

@@ -1,11 +1,11 @@
-const DefaultError = require('../exceptions/defaultError');
-const Orders = require('../sequelize_models/Orders');
-const Users = require('../sequelize_models/Users');
-const OrderItems = require('../sequelize_models/OrderItems');
-const Products = require('../sequelize_models/Products');
-const Units = require('../sequelize_models/Units');
-const Manufactures = require('../sequelize_models/Manufactures');
-const Categories = require('../sequelize_models/Categories');
+const DefaultError = require('../exceptions/default_error');
+const Orders = require('../sequelize_models/Order');
+const Users = require('../sequelize_models/User');
+const OrderItems = require('../sequelize_models/OrderItem');
+const Products = require('../sequelize_models/Product');
+const Units = require('../sequelize_models/Unit');
+const Manufactures = require('../sequelize_models/Manufacture');
+const Categories = require('../sequelize_models/Category');
 
 module.exports = class OrdersModel {
   constructor(req, res) {
@@ -68,29 +68,26 @@ module.exports = class OrdersModel {
     try {
       let prodsArr = [];
       let noProdErr = [];
-      for (let item of this.order) {  // На это нагромождение не обращайте внимания, пока не особо разобралась как делать красивые запросы в sequelize. Исправлюсь))
+      for (let item of this.order) {
         const prodValues = await Products.findAll({where: {id: item.id}});
         const product = prodValues[0].dataValues;
-        const unit = await Units.findAll({attributes: ['unit'], where: {id: product.id_units}});
-        const manufacture = await Manufactures.findAll({
-          attributes: ['manufacture'],
-          where: {id: product.id_manufacture},
-        });
-        const category = await Categories.findAll({attributes: ['category'], where: {id: product.id_category}});
-        const quantity = await OrderItems.findAll({
-          attributes: ['quantity'],
+        const unit = await Units.findOne({where: {id: product.id_units}});
+        const manufacture = await Manufactures.findOne({where: {id: product.id_manufacture}});
+        const category = await Categories.findOne({where: {id: product.id_category}});
+        const quantity = await OrderItems.findOne({
           where: {product_id: product.id, quantity: item.quantity},
         });
-        product.unit = unit[0].dataValues.unit;
-        product.category = category[0].dataValues.category;
-        product.manufacture = manufacture[0].dataValues.manufacture;
-        product.quantity = quantity[0].dataValues.quantity;
+
+        product.unit = unit.dataValues.unit;
+        product.category = category.dataValues.category;
+        product.manufacture = manufacture.dataValues.manufacture;
+        product.quantity = quantity.dataValues.quantity;
 
         if (product.amount < product.quantity) {     // check if products amount sufficient
           const data = {id: product.id, amount: product.amount};
-          await noProdErr.push(data);
+          noProdErr.push(data);
         } else {
-          await prodsArr.push(product);
+          prodsArr.push(product);
         }
       }
       console.log('noProdErr', noProdErr);
