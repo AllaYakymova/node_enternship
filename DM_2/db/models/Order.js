@@ -1,10 +1,10 @@
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('./index');
-const { User } = require('./User');
+// const User = require('./User');
 
-const OrderModel = class Order extends Model {};
+class Order extends Model {}
 
-OrderModel.init({
+Order.init({
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
@@ -16,16 +16,13 @@ OrderModel.init({
     foreignKey: true,
     allowNull: false,
     references: {
-      model: { tableName: 'Users' },
+      model: { tableName: 'users' },
       key: 'id'
     }
   }
 }, {
   sequelize,
-  modelName: 'Orders'
+  modelName: 'Order'
 });
 
-User.hasMany(OrderModel, {foreignKey: 'user_id', as: 'user'});
-OrderModel.belongsTo(User, {foreignKey: 'user_id', as: 'user'});
-
-module.exports = { OrderModel };
+module.exports = Order;

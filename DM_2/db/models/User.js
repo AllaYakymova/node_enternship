@@ -1,10 +1,10 @@
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('./index');
-const { OrderModel } = require('./Order');
+const Order = require('./Order');
 
 class User extends Model {}
 
-const UserModel = User.init({
+User.init({
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
@@ -12,8 +12,7 @@ const UserModel = User.init({
     allowNull: false
   },
   name: {
-    type: DataTypes.STRING(50),
-    defaultValue: null
+    type: DataTypes.STRING(50)
   },
   phone: {
     type: DataTypes.STRING(15),
@@ -21,8 +20,7 @@ const UserModel = User.init({
     unique: true
   },
   email: {
-    type: DataTypes.STRING(50),
-    defaultValue: null
+    type: DataTypes.STRING(50)
   },
   password: {
     type: DataTypes.STRING(30),
@@ -30,10 +28,8 @@ const UserModel = User.init({
   }
 }, {
   sequelize,
-  modelName: 'Users'
+  modelName: 'User'
 });
 
-User.hasMany(OrderModel, {foreignKey: 'user_id', as: 'user'});
-OrderModel.belongsTo(User, {foreignKey: 'user_id', as: 'user'});
 
-module.exports = { UserModel };
+module.exports = User;

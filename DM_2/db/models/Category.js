@@ -1,10 +1,10 @@
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('./index');
-const { Product } = require('./Product');
+const Product = require('./Product');
 
 class Category extends Model {}
 
-const CategoryModel = Category.init({
+Category.init({
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
@@ -19,11 +19,8 @@ const CategoryModel = Category.init({
   }
 }, {
   sequelize,
-  modelName: 'Categories'
+  modelName: 'Category'
 });
 
-Category.hasMany(Product, {foreignKey: 'category_id', as: 'category'});
-Product.belongsTo(Category, {foreignKey: 'category_id', as: 'category'});
 
-
-module.exports = { CategoryModel };
+module.exports = Category;

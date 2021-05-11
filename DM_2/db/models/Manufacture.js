@@ -1,10 +1,10 @@
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('./index');
-const { Product } = require('./Product');
+const Product = require('./Product');
 
 class Manufacture extends Model {}
 
-const ManufactureModel = Manufacture.init({
+Manufacture.init({
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
@@ -19,10 +19,7 @@ const ManufactureModel = Manufacture.init({
   }
 },{
   sequelize,
-  modelName: 'Manufactures'
+  modelName: 'Manufacture'
 });
 
-Manufacture.hasMany(Product, {foreignKey: 'manufacture_id', as: 'manufacture'});
-Product.belongsTo(Manufacture, {foreignKey: 'manufacture_id', as: 'manufacture'});
-
-module.exports = { ManufactureModel };
+module.exports = Manufacture;

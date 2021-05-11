@@ -1,3 +1,5 @@
+const dotenv = require('dotenv');
+dotenv.config({path:__dirname+'../../.env'});
 const fs = require('fs');
 
 module.exports = {
@@ -7,8 +9,19 @@ module.exports = {
     database: process.env.DEV_DB_DATABASE,
     host: process.env.DEV_DB_HOST,
     port: process.env.DEV_DB_PORT,
-    dialect: process.env.DEV_DB_DEALECT
+    dialect: 'postgres',
+    dialectOptions: {
+      bigNumberStrings: true
+    }
   },
+  // development: {
+  //   username: 'postgres',
+  //   password: 'qwerty',
+  //   database: 'sequelize_db',
+  //   host: 'localhost',
+  //   port: 5432,
+  //   dialect: 'postgres'
+  // },
   test: {
     username: process.env.CI_DB_USER,
     password: process.env.CI_DB_PASS,
@@ -30,7 +43,7 @@ module.exports = {
     dialectOptions: {
       bigNumberStrings: true,
       ssl: {
-        ca: fs.readFileSync(__dirname + '/postgres-ca-master.crt') //?
+        // ca: fs.readFileSync(__dirname + '/postgres-ca-master.crt')
       }
     }
   }

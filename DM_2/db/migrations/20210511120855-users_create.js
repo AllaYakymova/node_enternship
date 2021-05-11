@@ -2,7 +2,7 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('Users', {
+    await queryInterface.createTable('users', {
       id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
@@ -10,8 +10,7 @@ module.exports = {
         allowNull: false
       },
       name: {
-        type: Sequelize.STRING(50),
-        defaultValue: null
+        type: Sequelize.STRING(50)
       },
       phone: {
         type: Sequelize.STRING(15),
@@ -19,8 +18,7 @@ module.exports = {
         unique: true
       },
       email: {
-        type: Sequelize.STRING(50),
-        defaultValue: null
+        type: Sequelize.STRING(50)
       },
       password: {
         type: Sequelize.STRING(30),
@@ -32,6 +30,7 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('Users');
+    await queryInterface.dropTable('users');
   },
 };
+

@@ -2,18 +2,21 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('Manufactures', {
+    await queryInterface.createTable('orders', {
       id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
         primaryKey: true,
-        allowNull: false,
-        unique: true
+        allowNull: false
       },
-      manufacture: {
-        type: Sequelize.TEXT,
+      user_id: {
+        type: Sequelize.INTEGER,
+        foreignKey: true,
         allowNull: false,
-        unique: true
+        references: {
+          model: { tableName: 'users' },
+          key: 'id'
+        }
       },
       createdAt: {type:Sequelize.DATE, allowNull:false, defaultValue: new Date()},
       updatedAt: {type:Sequelize.DATE, allowNull:false, defaultValue: new Date()},
@@ -21,6 +24,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('Manufactures');
+    await queryInterface.dropTable('orders');
   },
 };

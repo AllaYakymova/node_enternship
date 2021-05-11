@@ -1,12 +1,11 @@
 const {Model, DataTypes} = require('sequelize');
 const sequelize = require('./index');
-const {OrderModel} = require('./Order');
-const {ProductModel} = require('./Product');
+const Order = require('./Order');
+const Product = require('./Product');
 
-class OrderItem extends Model {
-}
+class OrderItem extends Model {}
 
-const orderItemModel = OrderItem.init({
+OrderItem.init({
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
@@ -19,7 +18,7 @@ const orderItemModel = OrderItem.init({
     foreignKey: true,
     allowNull: false,
     references: {
-      model: { tableName: 'Products' },
+      model: { tableName: 'products' },
       key: 'id',
     },
   },
@@ -28,7 +27,7 @@ const orderItemModel = OrderItem.init({
     foreignKey: true,
     allowNull: false,
     references: {
-      model: { tableName: 'Orders' },
+      model: { tableName: 'orders' },
       key: 'id',
     },
   },
@@ -39,10 +38,7 @@ const orderItemModel = OrderItem.init({
   },
 }, {
   sequelize,
-  modelName: 'Order_items',
+  modelName: 'Order_item',
 });
 
-OrderItem.belongsTo(OrderModel, {foreignKey: 'order_id', as: 'order'});
-OrderItem.belongsTo(ProductModel, {foreignKey: 'product_id', as: 'product'});
-
-module.exports = {orderItemModel};
+module.exports = OrderItem;
