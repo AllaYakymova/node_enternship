@@ -1,6 +1,5 @@
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('./index');
-const Order = require('./Order');
 
 class User extends Model {}
 

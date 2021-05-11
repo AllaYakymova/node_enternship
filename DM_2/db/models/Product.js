@@ -1,8 +1,5 @@
 const {Model, DataTypes} = require('sequelize');
 const sequelize = require('./index');
-// const Manufacture = require('./Manufacture');
-// const Category = require('./Category');
-// const Unit = require('./Unit');
 
 class Product extends Model {
 }
