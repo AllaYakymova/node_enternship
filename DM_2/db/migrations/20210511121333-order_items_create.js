@@ -2,7 +2,7 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('order_items', {
+    await queryInterface.createTable('Order_items', {
       id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
@@ -15,7 +15,7 @@ module.exports = {
         foreignKey: true,
         allowNull: false,
         references: {
-          model: { tableName: 'products' },
+          model: { tableName: 'Products' },
           key: 'id'
         }
       },
@@ -24,7 +24,7 @@ module.exports = {
         foreignKey: true,
         allowNull: false,
         references: {
-          model: {tableName: 'orders'},
+          model: {tableName: 'Orders'},
           key: 'id'
         }
       },
@@ -39,6 +39,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('order_items');
+    await queryInterface.dropTable('Order_items');
   },
 };

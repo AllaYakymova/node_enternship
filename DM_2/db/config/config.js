@@ -1,5 +1,5 @@
 const dotenv = require('dotenv');
-dotenv.config({path:__dirname+'../../.env'});
+dotenv.config({path:__dirname+'/../../.env'});
 const fs = require('fs');
 
 module.exports = {
@@ -14,14 +14,6 @@ module.exports = {
       bigNumberStrings: true
     }
   },
-  // development: {
-  //   username: 'postgres',
-  //   password: 'qwerty',
-  //   database: 'sequelize_db',
-  //   host: 'localhost',
-  //   port: 5432,
-  //   dialect: 'postgres'
-  // },
   test: {
     username: process.env.CI_DB_USER,
     password: process.env.CI_DB_PASS,

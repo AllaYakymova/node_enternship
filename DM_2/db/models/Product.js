@@ -1,68 +1,69 @@
-const {Model, DataTypes} = require('sequelize');
-const sequelize = require('./index');
+const {Model} = require('sequelize');
 
-class Product extends Model {
-}
+module.exports = (sequelize, DataTypes) => {
 
-Product.init({
-  id: {
-    type: DataTypes.STRING,
-    primaryKey: true,
-    allowNull: false,
-    unique: true,
-  },
-  product_name: {
-    type: DataTypes.STRING(1000),
-    allowNull: false,
-  },
-  manufacture_id: {
-    type: DataTypes.INTEGER,
-    foreignKey: true,
-    allowNull: false,
-    references: {
-      model: {tableName: 'manufactures'},
-      key: 'id',
+  class Product extends Model {
+  }
+
+  Product.init({
+    id: {
+      type: DataTypes.STRING,
+      primaryKey: true,
+      allowNull: false,
+      unique: true,
     },
-  },
-  ingredients: {
-    type: DataTypes.TEXT,
-    allowNull: true,
-  },
-  amount: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-  },
-  unit_id: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    foreignKey: true,
-    references: {
-      model:  {tableName: 'units'},
-      key: 'id',
+    product_name: {
+      type: DataTypes.STRING(1000),
+      allowNull: false,
     },
-  },
-  price: {
-    type: DataTypes.REAL,
-    allowNull: false,
-  },
-  img_link: {
-    type: DataTypes.STRING(1000),
-  },
-  category_id: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    foreignKey: true,
-    references: {
-      model: {tableName: 'categories'},
-      key: 'id',
+    manufacture_id: {
+      type: DataTypes.INTEGER,
+      foreignKey: true,
+      allowNull: false,
+      references: {
+        model: {tableName: 'manufactures'},
+        key: 'id',
+      },
     },
-  },
-}, {
-  sequelize,
-  modelName: 'Product',
-});
+    ingredients: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
+    amount: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    unit_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      foreignKey: true,
+      references: {
+        model: {tableName: 'units'},
+        key: 'id',
+      },
+    },
+    price: {
+      type: DataTypes.REAL,
+      allowNull: false,
+    },
+    img_link: {
+      type: DataTypes.STRING(1000),
+    },
+    category_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      foreignKey: true,
+      references: {
+        model: {tableName: 'categories'},
+        key: 'id',
+      },
+    },
+  }, {
+    sequelize,
+    modelName: 'Product',
+  });
+  return Product;
+};
 
-
-module.exports = Product;
 
 

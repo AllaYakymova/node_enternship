@@ -1,27 +1,28 @@
-const { Model, DataTypes } = require('sequelize');
-const sequelize = require('./index');
+const {Model} = require('sequelize');
 
-class Order extends Model {}
-
-Order.init({
-  id: {
-    type: DataTypes.INTEGER,
-    autoIncrement: true,
-    primaryKey: true,
-    allowNull: false
-  },
-  user_id: {
-    type: DataTypes.INTEGER,
-    foreignKey: true,
-    allowNull: false,
-    references: {
-      model: { tableName: 'users' },
-      key: 'id'
-    }
+module.exports = (sequelize, DataTypes) => {
+  class Order extends Model {
   }
-}, {
-  sequelize,
-  modelName: 'Order'
-});
 
-module.exports = Order;
+  Order.init({
+    id: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true,
+      allowNull: false,
+    },
+    user_id: {
+      type: DataTypes.INTEGER,
+      foreignKey: true,
+      allowNull: false,
+      references: {
+        model: {tableName: 'users'},
+        key: 'id',
+      },
+    },
+  }, {
+    sequelize,
+    modelName: 'Order',
+  });
+  return Order;
+};

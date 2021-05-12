@@ -2,7 +2,7 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    return queryInterface.createTable('products', {
+    return queryInterface.createTable('Products', {
       id: {
         type: Sequelize.STRING,
         primaryKey: true,
@@ -18,7 +18,7 @@ module.exports = {
         foreignKey: true,
         allowNull: false,
         references: {
-          model: {tableName: 'manufactures'},
+          model: {tableName: 'Manufactures'},
           key: 'id'
         }
       },
@@ -35,7 +35,7 @@ module.exports = {
         allowNull: false,
         foreignKey: true,
         references: {
-          model: { tableName: 'units' },
+          model: { tableName: 'Units' },
           key: 'id'
         }
       },
@@ -51,7 +51,7 @@ module.exports = {
         allowNull: false,
         foreignKey: true,
         references: {
-          model: {tableName: 'categories'},
+          model: {tableName: 'Categories'},
           key: 'id'
         }
       },
@@ -61,6 +61,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('products');
+    return queryInterface.dropTable('Products');
   }
 };

@@ -1,12 +1,12 @@
 const {Sequelize} = require('sequelize');
 const dotenv = require('dotenv');
-dotenv.config({path:__dirname+'../../.env'});
-// const env = process.env.NODE_ENV || 'development';
-const { development: dev } = require('./config/config');
+dotenv.config({path:__dirname+'/../.env'});
+const env = process.env.NODE_ENV || 'development';
+const { [env]: mode} = require('./config');
 
-const sequelize = new Sequelize(dev.database, dev.username, dev.password, {
-  host: dev.host,
-  dialect: dev.dialect,
+const sequelize = new Sequelize(mode.database, mode.username, mode.password, {
+  host: mode.host,
+  dialect: mode.dialect,
   define: {
     supportBigNumbers:true,
     timestamps: false
