@@ -18,21 +18,23 @@ module.exports = class OrdersController {
     try {
       this.order.user = await this.orderModel.getUserData(this.req.headers.userphone, db.User);
 
+      //check if enough products
       const notEnoughProductsData = await this.orderModel.checkIfEnoughProducts(this.products, db.Product);
-      console.log('this.products', this.products);
 
      if( notEnoughProductsData.length === 0 ) {
-
+       // set order in db & get order props (id, date)
        this.order.props = await this.orderModel.getOrderProps(this.order.user.id, db.Order);
 
+       // set order items into db
        await this.orderModel.setOrderItems(this.order.props.id, this.products, db.Order_item);
 
-       this.order.products = await this.orderModel.getOrderInfo(this.order.props.id, db.Order_item);
-
+      // send answer about placing order
        await this.view.okView(this.res, {products: this.products}, 'The order has placed successfully');
 
-       this.order.productsDetails = await this.orderModel.getDetailOrderInfo(this.order.products, db);
+       // get details about ordered products
+       this.order.productsDetails = await this.orderModel.getDetailOrderInfo(this.products, db);
 
+       // send email with order data
        await this.emailOrderInfo();
      } else {
        throw this.view.errorData(this.res, 200, notEnoughProductsData, 'Not enough products');

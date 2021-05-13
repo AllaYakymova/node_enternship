@@ -6,7 +6,12 @@ module.exports = class OrdersModel {
   async getUserData(phone, db) {
     try {
       const getUserId = await db.findOne({where: {phone: phone}});
-      return getUserId.dataValues;
+      return {
+        id: getUserId.dataValues.id,
+        name: getUserId.dataValues.name,
+        phone: getUserId.dataValues.phone,
+        email:getUserId.dataValues.email
+      };
     } catch (err) {
       throw new DefaultError(400, err.stack);
     }
@@ -48,18 +53,6 @@ module.exports = class OrdersModel {
     }
   }
 
-  async getOrderInfo(orderId, db) {
-    try {
-      const order = await db.findAll({
-        attributes: [['product_id', 'id'], 'quantity'],
-        where: {order_id: orderId},
-      });
-      return order.map(el => el.dataValues);
-    } catch (err) {
-      throw new DefaultError(400, err.stack);
-    }
-  }
-
   async getDetailOrderInfo(products, db) {
     try {
       const {Product, Manufacture, Category, Unit } = db;
@@ -75,7 +68,7 @@ module.exports = class OrdersModel {
       };
       const getAmount = (el) => {
         const prod = products.find(prod => prod.id === el);
-        return prod.quantity;
+        return prod.count;
       };
 
       const res = await Product.findAll(queryParams);
