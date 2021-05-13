@@ -1,45 +1,13 @@
-const DefaultError = require('../exceptions/default_error');
-const Users = require('../sequelize_models/User');
+const db = require('../db/models');
 
 module.exports = class UsersModel {
-  constructor(req, res, next) {
-    this.req = req;
-    this.res = res;
-    this.next = next;
+
+  async checkIfUserExists(phone, pass) {
+      const resultAuth = await db.User.findOne({where: { phone: phone, password: pass }});
+      return resultAuth !== null;
   }
 
-  async checkIfUserExists() {
-    try {
-      const resultAuth = await Users.findAll({
-        attributes: ['id'],
-        where: {
-          phone: this.req.headers.userphone,
-          password: this.req.headers.userpassword,
-        },
-      });
-      return resultAuth.length !== 0;
-    } catch (err) {
-      throw new DefaultError(err);
-    }
-  }
-
-  async regUser() {
-    try {
-      const isUserExists = await this.checkIfUserExists();
-      if(isUserExists) {
-        throw new DefaultError(200, "User is already registered");
-      }
-      await Users.create({
-        name: this.req.headers.name,
-        phone: this.req.headers.phone,
-        email: this.req.headers.email,
-        password: this.req.headers.password,
-      });
-    } catch (err) {
-      this.next(err);
-    }
-  }
-
+  userRegistration = async (user) => await db.User.create(user);
 
 };
 

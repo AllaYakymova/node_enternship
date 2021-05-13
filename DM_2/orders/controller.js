@@ -1,41 +1,59 @@
 'use strict';
+const db = require('../db/models');
+const asyncHandler = require('../common/asyncHandler');
 const OrdersModel = require('./orders_model');
 const ViewsClass = require('../views/view_class');
 
-module.exports = class OrdersController {
-  constructor(req, res, next) {
-    this.req = req;
-    this.res = res;
-    this.next = next;
-    this.orderModel = new OrdersModel(req, res);
-    this.view = new ViewsClass(res);
+class OrdersController {
+  constructor() {
+    this.orderModel = new OrdersModel();
+    this.view = new ViewsClass();
   }
+  order = {};
 
-  async controllerOrder() {
-    try {
-      const result = await this.orderModel.completeOrder();
-      const detailData = await this.orderModel.getDetailOrderInfo();
-      if (!!detailData[0].price) {
-        this.products = detailData;
-        await this.view.okView(this.res, {products: result.products}, 'The order has placed successfully');
-        await this.emailOrderInfo();
-      } else {
-        throw this.view.errorData(this.res, 200, detailData, 'Not enough products');
-      }
-    } catch (err) {
-      this.next(err);
-    }
-  }
+  controllerOrder = asyncHandler(async (req, res, next) => {
+    const products = req.body.products;
 
-  async emailOrderInfo() {
-    try {
-      const {name, phone, email} = this.orderModel.user;
-      const data = { phone: phone, name: name ? name : 'no data', email: email ? email : 'no data', time: this.orderModel.order_createdAt, id: this.orderModel.order_id, products: this.products };
-      return this.view.sendOrder(data);
-    } catch (err) {
-      this.view.errorView(err, this.res);
+    this.order.user = await this.orderModel.getUserData(req.headers.userphone, db.User);
+
+    //check if enough products
+    const notEnoughProductsData = await this.orderModel.checkIfEnoughProducts(products, db.Product);
+
+    if (notEnoughProductsData.length === 0) {
+      // set order in db & get order props (id, date)
+      this.order.props = await this.orderModel.getOrderProps(this.order.user.id, db.Order);
+
+      // set order items into db
+      await this.orderModel.setOrderItems(this.order.props.id, products, db.Order_item);
+
+      // send answer about placing order
+      await this.view.okView(res, {products: products}, 'The order has placed successfully');
+
+      // get details about ordered products
+      this.order.productsDetails = await this.orderModel.getDetailOrderInfo(products, db);
+
+      console.log(this.order);
+      // send email with order data
+      await this.emailOrderInfo();
+    } else {
+      throw this.view.errorData(res, 200, notEnoughProductsData, 'Not enough products');
     }
-  }
-};
+  });
+
+  emailOrderInfo = asyncHandler(async () => {
+    const {name, phone, email} = this.order.user;
+    const data = {
+      phone: phone,
+      name: name ? name : 'no data',
+      email: email ? email : 'no data',
+      time: this.order.props.createdAt,
+      id: this.order.props.id,
+      products: this.order.productsDetails,
+    };
+    return this.view.sendOrder(data);
+  });
+}
+
+module.exports = new OrdersController();
 
 

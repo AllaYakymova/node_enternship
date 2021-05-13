@@ -19,5 +19,4 @@ module.exports = Joi.object({
     .ruleset.min(4).max(10).rule({ message: 'Password must be between 4 and 10' })
     .pattern(new RegExp(/^[a-zA-Z0-9]{4,10}$/))
     .required()
-}).required()
-  .with('userphone', 'userpassword');
+}).with('userphone', 'userpassword');
