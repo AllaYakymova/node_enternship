@@ -15,7 +15,6 @@ module.exports = class ViewsClass {
         user: req.headers.userphone,
         isAuthenticated: true,
       };
-      console.log('res.locals.user', res.locals.user);
     } else {
       res.locals.user = {
         isAuthenticated: false,
