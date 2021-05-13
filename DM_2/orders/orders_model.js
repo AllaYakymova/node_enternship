@@ -1,112 +1,102 @@
+'use strict';
 const DefaultError = require('../exceptions/default_error');
-const Orders = require('../db/models/Order');
-const Users = require('../db/models/User');
-const OrderItems = require('../db/models/OrderItem');
-const Products = require('../db/models/Product');
-const Units = require('../db/models/Unit');
-const Manufactures = require('../db/models/Manufacture');
-const Categories = require('../db/models/Category');
 
 module.exports = class OrdersModel {
-  constructor(req, res) {
-    this.products = req.body.products;
-    this.req = req;
-    this.res = res;
-  }
 
-  async getUserData() {
+  async getUserData(phone, db) {
     try {
-      const getUserId = await Users.findAll({
-        attributes: ['id', 'name', 'phone', 'email'],
-        where: {phone: this.req.headers.userphone},
-      });
-      this.user = getUserId[0].dataValues;
-      console.log('this.user', this.user);
+      const getUserId = await db.findOne({where: {phone: phone}});
+      return getUserId.dataValues;
     } catch (err) {
       throw new DefaultError(400, err.stack);
     }
   }
 
-  async getOrderId() {
+  async getOrderProps(userId, db) {
     try {
-      const newOrder = await Orders.create({user_id: this.user.id});
-      this.order_id = newOrder.dataValues.id;
-      this.order_createdAt = newOrder.dataValues.createdAt;
+      const newOrder = await db.create({user_id: userId});
+      return newOrder.dataValues;
     } catch (err) {
       throw new DefaultError(400, err.stack);
     }
   }
 
-  async setOrderItems() {
+  async checkIfEnoughProducts(products, db) {
     try {
-      for (let prod of this.products) {
-        await OrderItems.create({
-          order_id: this.order_id,
-          product_id: prod.id,
-          quantity: prod.count,
-        });
-      }
-    } catch (err) {
-      throw new DefaultError(400, err.stack);
-    }
-  }
-
-  async getOrderInfo() {
-    try {
-      const order = await OrderItems.findAll({
-        attributes: [['product_id', 'id'], 'quantity'],
-        where: {order_id: this.order_id},
-      });
-      this.order = order.map(el => el.dataValues);
-      return {products: this.order};
-    } catch (err) {
-      throw new DefaultError(400, err.stack);
-    }
-  }
-
-  async getDetailOrderInfo() {
-    try {
-      let prodsArr = [];
-      let noProdErr = [];
-      for (let item of this.order) {
-        const prodValues = await Products.findAll({where: {id: item.id}});
-        const product = prodValues[0].dataValues;
-        const unit = await Units.findOne({where: {id: product.id_units}});
-        const manufacture = await Manufactures.findOne({where: {id: product.id_manufacture}});
-        const category = await Categories.findOne({where: {id: product.id_category}});
-        const quantity = await OrderItems.findOne({
-          where: {product_id: product.id, quantity: item.quantity},
-        });
-
-        product.unit = unit.dataValues.unit;
-        product.category = category.dataValues.category;
-        product.manufacture = manufacture.dataValues.manufacture;
-        product.quantity = quantity.dataValues.quantity;
-
-        if (product.amount < product.quantity) {     // check if products amount sufficient
-          const data = {id: product.id, amount: product.amount};
-          noProdErr.push(data);
-        } else {
-          prodsArr.push(product);
+      let noProdData = [];
+      for (let prod of products) {
+        const prodValues = await db.findOne({id: prod.id});
+        const amount = prodValues.dataValues.amount;
+        if (prod.count > amount) {
+          noProdData.push({id: prod.id, amount: amount});
         }
       }
-      console.log('noProdErr', noProdErr);
-      return noProdErr.length > 0 ? noProdErr : prodsArr;
+      return noProdData;
     } catch (err) {
       throw new DefaultError(400, err.stack);
     }
   }
 
-  async completeOrder() {
+  async setOrderItems(orderId, products, db) {
     try {
-      await this.getUserData();
-      await this.getOrderId();
-      await this.setOrderItems();
-      return await this.getOrderInfo();
+      const data = products.map(prod => {
+        return { order_id: orderId, product_id: prod.id, quantity: prod.count };
+      });
+        await db.bulkCreate(data);
+      } catch (err) {
+      throw new DefaultError(400, err.stack);
+    }
+  }
+
+  async getOrderInfo(orderId, db) {
+    try {
+      const order = await db.findAll({
+        attributes: [['product_id', 'id'], 'quantity'],
+        where: {order_id: orderId},
+      });
+      return order.map(el => el.dataValues);
     } catch (err) {
-      console.log(err);
-      // throw new DefaultError(400, err.stack);
+      throw new DefaultError(400, err.stack);
+    }
+  }
+
+  async getDetailOrderInfo(products, db) {
+    try {
+      const {Product, Manufacture, Category, Unit } = db;
+      let ids = products.map(el => el.id);
+      let queryParams = {
+        attributes: ['id', 'product_name', 'ingredients', 'amount', 'price', 'img_link'],
+        where: {id: [...ids]},
+        include: [
+          { model: Manufacture, attributes: ['manufacture'], required: true },
+          { model: Unit, attributes: ['unit'], required: true },
+          { model: Category, attributes: ['category'], required: true },
+        ]
+      };
+      const getAmount = (el) => {
+        const prod = products.find(prod => prod.id === el);
+        return prod.quantity;
+      };
+
+      const res = await Product.findAll(queryParams);
+      return res.map(el => {
+          return {
+            id: el.id,
+            product_name: el.product_name,
+            ingredients: el.ingredients,
+            amount: el.amount,
+            price: el.price,
+            img_link: el.img_link,
+            manufacture: el.Manufacture.manufacture,
+            unit: el.Unit.unit,
+            category: el.Category.category,
+            count: getAmount(el.id)
+          }
+      });
+    } catch (err) {
+      throw new DefaultError(400, err.stack);
     }
   }
 };
+
 

@@ -15,7 +15,7 @@ const authUser = (req, res, next) => {
 };
 
 // route  POST /users/registration
-userRouter.post("/registration",
+userRouter.get("/registration",
   validator.headers(userSchema),
   regNewUser);
 

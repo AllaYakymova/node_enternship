@@ -26,7 +26,7 @@ module.exports = class ViewsClass {
 
   async sendOrder(data) {
     const products = data.products;
-    const prodInfo = products.map(product => `<tr><td>${product.product_name}</td><td>${product.quantity}</td><td>${product.price}</td><td>${product.unit}</td><td>${product.price * product.quantity}</td></tr>`)
+    const prodInfo = products.map(product => `<tr><td>${product.product_name}</td><td>${product.count}</td><td>${product.price}</td><td>${product.unit}</td><td>${product.price * product.quantity}</td></tr>`)
       .join('');
 
     const letterBody = `<div><h2><ins>New order #${data.id}</ins></h2><hr><p>Time: ${data.time}</p><h3>Customer details</h3><p><strong>name:</strong> ${data.name}</p><p><strong>phone:</strong> ${data.phone}</p><p><strong>email:</strong> ${data.email}</p><h3>Order details</h3><table border="1" width="60%" cellpadding="5"><tr><th>Product name</th><th>Quantity</th><th>Price</th><th>Unites</th><th>Sum</th></tr>${prodInfo}</table><h3><ins>Total: ${products.map(el => +el.price * +el.quantity)

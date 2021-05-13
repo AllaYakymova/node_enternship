@@ -1,40 +1,23 @@
 const DefaultError = require('../exceptions/default_error');
-const Users = require('../db/models/User');
+const db = require('../db/models');
 
 module.exports = class UsersModel {
-  constructor(req, res, next) {
-    this.req = req;
-    this.res = res;
+  constructor(next) {
     this.next = next;
   }
 
-  async checkIfUserExists() {
+  async checkIfUserExists(phone, pass) {
     try {
-      const resultAuth = await Users.findAll({
-        attributes: ['id'],
-        where: {
-          phone: this.req.headers.userphone,
-          password: this.req.headers.userpassword,
-        },
-      });
-      return resultAuth.length !== 0;
+      const resultAuth = await db.User.findOne({where: { phone: phone, password: pass }});
+      return resultAuth !== null;
     } catch (err) {
-      throw new DefaultError(err);
+      this.next(err);
     }
   }
 
-  async regUser() {
+  async regUser(user) {
     try {
-      const isUserExists = await this.checkIfUserExists();
-      if(isUserExists) {
-        throw new DefaultError(200, "User is already registered");
-      }
-      await Users.create({
-        name: this.req.headers.name,
-        phone: this.req.headers.phone,
-        email: this.req.headers.email,
-        password: this.req.headers.password,
-      });
+      await db.User.create(user);
     } catch (err) {
       this.next(err);
     }

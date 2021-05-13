@@ -14,12 +14,12 @@ module.exports = class UsersController {
 
   async authUserController() {
     try {
-      const authInfo = await this.userModel.checkIfUserExists();
+      const authInfo = await this.userModel.checkIfUserExists(this.req.headers.userphone, this.req.headers.userpassword);
       if (authInfo) {
         await this.view.setResLocalsData(this.req, this.res, true);
       } else {
         await this.view.setResLocalsData(this.req, this.res, false);
-        await this.view.errorData(this.res, 401,{phone: this.req.headers.userphone}, 'User is not registered');
+        this.view.errorData(this.res, 401,{phone: this.req.headers.userphone}, `User  is not registered`);
       }
     } catch (err) {
       throw new DefaultError(400, err.stack);
@@ -29,9 +29,15 @@ module.exports = class UsersController {
 
   async regUserController() {
     try {
-      const authInfo = await this.userModel.checkIfUserExists();
+      const authInfo = await this.userModel.checkIfUserExists(this.req.headers.userphone, this.req.headers.userpassword);
       if (!authInfo) {
-        await this.userModel.regUser();
+        const user = {
+          name: this.req.headers.username,
+          phone: this.req.headers.userphone,
+          email: this.req.headers.useremail,
+          password: this.req.headers.userpassword,
+        };
+        await this.userModel.regUser(user);
         return this.view.okView(this.res, {user: {phone: this.req.headers.userphone}}, 'User has registered successfully');
       }
       throw this.view.errorData(this.res, 200, {phone: this.req.headers.userphone}, 'User with phone number has already registered');

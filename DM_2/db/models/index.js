@@ -25,19 +25,19 @@ db.sequelize = sequelize;
 db.Sequelize = sequelize;
 db.Op = sequelize.Op;
 
-// db.User.hasMany(db.Order, {foreignKey: 'user_id'});
-// db.Order.belongsTo(db.User, {foreignKey: 'user_id'});
+db.User.hasMany(db.Order, {foreignKey: 'user_id'});
+db.Order.belongsTo(db.User, {foreignKey: 'user_id'});
 
-// db.Category.hasMany(db.Product, {foreignKey: 'category_id'});
-// db.Manufacture.hasMany(db.Product, {foreignKey: 'manufacture_id'});
-// db.Unit.hasMeny(db.Product, {foreignKey: 'unit_id'});
-// db.Product.belongsTo(db.Category, {foreignKey: 'category_id'});
-// db.Product.belongsTo(db.Manufacture, {foreignKey: 'manufacture_id'});
-// db.Product.belongsTo(db.Unit, {foreignKey: 'unit_id'});
+db.Category.hasMany(db.Product, {foreignKey: 'category_id'});
+db.Manufacture.hasMany(db.Product, {foreignKey: 'manufacture_id'});
+db.Unit.hasMany(db.Product, {foreignKey: 'unit_id'});
+db.Product.belongsTo(db.Category, {foreignKey: 'category_id'});
+db.Product.belongsTo(db.Manufacture, {foreignKey: 'manufacture_id'});
+db.Product.belongsTo(db.Unit, {foreignKey: 'unit_id'});
 
-// db.Order.hasMany(db.OrderItem, {foreignKey: 'order_id'});
-// db.Product.hasMany(db.OrderItem, {foreignKey: 'product_id'});
-// db.OrderItem.belongsTo(db.Order, {foreignKey: 'order_id'});
-// db.OrderItem.belongsTo(db.Product, {foreignKey: 'product_id'});
+db.Order.hasMany(db.Order_item, {foreignKey: 'order_id'});
+db.Product.hasMany(db.Order_item, {foreignKey: 'product_id'});
+db.Order_item.belongsTo(db.Order, {foreignKey: 'order_id'});
+db.Order_item.belongsTo(db.Product, {foreignKey: 'product_id'});
 
 module.exports = db;

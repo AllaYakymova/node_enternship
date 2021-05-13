@@ -1,4 +1,5 @@
 const {client} = require('../config/db_config');
+const Product = require('../db/models/Product');
 
 module.exports = class ProductsModel {
   constructor(req) {
@@ -7,7 +8,10 @@ module.exports = class ProductsModel {
 
   async getAllProducts() {
     try {
-      const query = `SELECT products.id, product_name, manufactures.manufacture, categories.category FROM products, categories, manufactures WHERE products.id_manufacture = manufactures.id AND products.id_category = categories.id ORDER BY product_name ASC;`;
+      const query = await Product.findAll({
+        attributes: [['product_id', 'id'], 'quantity'],
+      });
+      `SELECT products.id, product_name, manufactures.manufacture, categories.category FROM products, categories, manufactures WHERE products.id_manufacture = manufactures.id AND products.id_category = categories.id ORDER BY product_name ASC;`;
 
       const result = await client.query(query);
       return result.rows;

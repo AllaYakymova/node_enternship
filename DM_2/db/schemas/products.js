@@ -132,8 +132,8 @@ const products = [
   ["45256950",	"ORIGINAL LOW FAT YOGURT",	"Yoplait USA",	"Dairy, Eggs & Cheese",	"GRAPEFRUIT INGREDIENTS: CULTURED PASTEURIZED GRADE A REDUCED FAT MILK, SUGAR, MODIFIED CORN STARCH, GRAPEFRUIT JUICE CONCENTRATE, KOSHER GELATIN, HONEY, VEGETABLE JUICE (FOR COLOR), PECTIN, NATURAL FLAVOR, VITAMIN A ACETATE, COLORED WITH ANNATTO EXTRACT, VITAMIN D3. VANILLA INGREDIENTS: CULTURED PASTEURIZED GRADE A REDUCED FAT MILK, SUGAR, MODIFIED CORN STARCH, KOSHER GELATIN, NATURAL FLAVOR, VITAMIN A ACETATE, VITAMIN D3. CONTAINS LIVE AND ACTIVE CULTURES",	44271,	"0.33 L",	12,	"https://www.lightandfit.com/wp-content/uploads/2017/02/Vanilla_ss_fruit-1.png"]
 ];
 
-getData().then(res => {
-  for (let prod of res) {
-    db.Product.create(prod)
-  }
-}).catch(console.log);
+// getData().then(res => {
+//   for (let prod of res) {
+//     db.Product.create(prod)
+//   }
+// }).catch(console.log);

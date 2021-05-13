@@ -3,11 +3,10 @@ const morgan = require('morgan');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
-dotenv.config();
+dotenv.config({path:__dirname+'./.env'});
 const errorHandler = require('./exceptions/error_middleware');
 const app = express();
-const port = process.env.PORT || 3000;
-// const port = 8000;
+const port = process.env.NODE_PORT || 8080;
 
 const productRouter = require('./products/router');
 const orderRouter = require('./orders/router');
