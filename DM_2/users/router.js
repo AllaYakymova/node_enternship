@@ -2,27 +2,17 @@ const express = require("express");
 const userRouter = express.Router();
 const validator = require('../config/validation_config');
 const userSchema = require('../dtos/user.dtos');
-const UsersController = require("./users_controller");
-
-const regNewUser = (req, res, next) => {
-  const newUserController = new UsersController(req, res, next);
-  return newUserController.regUserController()
-};
-
-const authUser = (req, res, next) => {
-  const userController = new UsersController(req, res, next);
-  return userController.authUserController()
-};
+const usersController = require("./users_controller");
 
 // route  POST /users/registration
 userRouter.get("/registration",
   validator.headers(userSchema),
-  regNewUser);
+  usersController.regUserController);
 
 // route  GET /users/authentication
 userRouter.get("/authentication",
   validator.headers(userSchema),
-  authUser );
+  usersController.authUserController);
 
 
 module.exports = userRouter;

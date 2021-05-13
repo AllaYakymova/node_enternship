@@ -4,12 +4,10 @@ const asyncHandler = require('../common/asyncHandler');
 const ProductsModel = require('./products_model');
 const ViewsClass = require('../views/view_class');
 
-module.exports = class ProductsController {
-  constructor(req, res) {
-    this.req = req;
-    this.res = res;
-    this.productsModel = new ProductsModel(req);
-    this.view = new ViewsClass(res);
+class ProductsController {
+  constructor() {
+    this.productsModel = new ProductsModel();
+    this.view = new ViewsClass();
   }
 
   getProducts= asyncHandler(async(req, res, next) => {
@@ -37,4 +35,6 @@ module.exports = class ProductsController {
       this.view.errorData(res, 200, data, `There is no products satisfying the query request`);
     }
   })
-};
+}
+
+module.exports = new ProductsController();

@@ -1,6 +1,6 @@
 'use strict';
 const DefaultError = require('../exceptions/default_error');
-const API = require('../common/constants');
+// const API = require('../common/constants');
 const { Op } = require('sequelize');
 
 

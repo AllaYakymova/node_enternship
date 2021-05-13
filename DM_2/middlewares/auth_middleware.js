@@ -1,7 +1,6 @@
-const AuthController = require('../users/users_controller');
+const authController = require('../users/users_controller');
 
 module.exports = async (req, res, next) => {
-  const authCheck = new AuthController(req, res);
-  await authCheck.authUserController();
+  await authController.authUserController(req, res, next);
   next();
 };
